@@ -3,9 +3,7 @@ package io.stanwood.framework.analytics.bugfender;
 
 import android.app.Application;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
-import android.util.Log;
 
 import com.bugfender.sdk.Bugfender;
 
@@ -32,8 +30,8 @@ public class BugfenderTracker extends Tracker {
     }
 
     @Override
-    protected void init(Application context) {
-        Bugfender.init(context, appKey, BuildConfig.DEBUG);
+    protected void init() {
+        Bugfender.init(context, appKey, isDebug);
         if (enableLogcatLogging) {
             Bugfender.enableLogcatLogging();
         }
@@ -56,6 +54,7 @@ public class BugfenderTracker extends Tracker {
         private boolean enableUiLogging;
         private boolean enableLogcatLogging;
         private String appKey;
+
         Builder(Application context, String appKey) {
             super(context);
             this.appKey = appKey;

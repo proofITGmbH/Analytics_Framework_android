@@ -25,7 +25,7 @@ public class FabricTracker extends Tracker {
     }
 
     @Override
-    protected void init(Application context) {
+    protected void init() {
         Fabric.with(context, new Crashlytics.Builder()
                 .core(new CrashlyticsCore.Builder().build())
                 .build());

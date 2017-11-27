@@ -8,9 +8,9 @@ import android.support.annotation.Nullable;
 public abstract class Tracker {
 
     private boolean exceptionTrackingEnabled;
-    private boolean isDebug;
+    protected boolean isDebug;
     private int logLevel;
-    private Application context;
+    protected Application context;
 
     protected Tracker(Builder builder) {
         this.context = builder.context;
@@ -18,11 +18,11 @@ public abstract class Tracker {
         this.isDebug = builder.isDebug;
         this.logLevel = builder.logLevel;
         if (!isDebug) {
-            init(context);
+            init();
         }
     }
 
-    protected abstract void init(Application context);
+    protected abstract void init();
 
 
     void trackEvent(@NonNull TrackerParams params) {
