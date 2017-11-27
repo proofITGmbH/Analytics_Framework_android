@@ -17,17 +17,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         AppTracker.init(TrackerContainer.builder()
                 .addTracker(FirebaseTracker.builder(getApplication())
-                        .setEnabled(!BuildConfig.DEBUG)
                         .setExceptionTrackingEnabled(true)
                         .build())
                 .addTracker(FabricTracker.builder(getApplication())
-                        .setEnabled(!BuildConfig.DEBUG)
                         .setExceptionTrackingEnabled(true)
                         .build())
                 .addTracker(BugfenderTracker.builder(getApplication(), "KEY")
                         .enableLogcatLogging(false)
                         .enableUiLogging(false)
-                        .setEnabled(!BuildConfig.DEBUG)
                         .setExceptionTrackingEnabled(true)
                         .build())
                 .build());

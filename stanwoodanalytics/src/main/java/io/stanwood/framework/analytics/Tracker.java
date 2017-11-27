@@ -3,24 +3,22 @@ package io.stanwood.framework.analytics;
 
 import android.app.Application;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 public abstract class Tracker {
 
     private boolean exceptionTrackingEnabled;
-    private boolean enabled;
+    private boolean isDebug;
+    private int logLevel;
     private Application context;
-    private boolean isInited;
 
     protected Tracker(Builder builder) {
-        this.exceptionTrackingEnabled = builder.exceptionTrackingEnabled;
-        this.enabled = builder.enabled;
         this.context = builder.context;
-    }
-
-    private synchronized void ensureInited() {
-        if (!isInited) {
+        this.exceptionTrackingEnabled = builder.exceptionTrackingEnabled;
+        this.isDebug = builder.isDebug;
+        this.logLevel = builder.logLevel;
+        if (!isDebug) {
             init(context);
-            isInited = true;
         }
     }
 
@@ -28,28 +26,30 @@ public abstract class Tracker {
 
 
     void trackEvent(@NonNull TrackerParams params) {
-        if (!enabled) {
-            return;
-        }
         if (!shouldTrack(params)) {
             return;
         }
-        ensureInited();
-        track(params);
+        if (isDebug) {
+            if (logLevel > 0) {
+                debug(params, null);
+            }
+        } else {
+            track(params);
+        }
     }
+
 
     void trackException(@NonNull Throwable throwable) {
-        if (!enabled) {
+        if (!exceptionTrackingEnabled) {
             return;
         }
-        if (exceptionTrackingEnabled) {
-            ensureInited();
+        if (isDebug) {
+            if (logLevel > 0) {
+                debug(null, throwable);
+            }
+        } else {
             track(throwable);
         }
-    }
-
-    public boolean isEnabled() {
-        return enabled;
     }
 
     protected boolean shouldTrack(@NonNull TrackerParams params) {
@@ -60,8 +60,12 @@ public abstract class Tracker {
 
     public abstract void track(@NonNull Throwable throwable);
 
+    public void debug(@Nullable TrackerParams params, @Nullable Throwable throwable) {
+    }
+
     public abstract static class Builder {
-        private boolean enabled = !BuildConfig.DEBUG;
+        private boolean isDebug = BuildConfig.DEBUG;
+        private int logLevel = 0;
         private boolean exceptionTrackingEnabled = false;
         private Application context;
 
@@ -69,13 +73,18 @@ public abstract class Tracker {
             this.context = context;
         }
 
-        public Builder setEnabled(boolean enable) {
-            this.enabled = enable;
+        public Builder setDebug(boolean enable) {
+            this.isDebug = enable;
             return this;
         }
 
         public Builder setExceptionTrackingEnabled(boolean enabled) {
             this.exceptionTrackingEnabled = enabled;
+            return this;
+        }
+
+        public Builder setLogLevel(int level) {
+            this.logLevel = level;
             return this;
         }
 
