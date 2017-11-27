@@ -1,0 +1,32 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    project.ext {
+        MinSdkVersion = 21
+        TargetSdkVersion = 26
+        CompileSdkVersion = 26
+        SupportLibVersion = '26.1.0'
+        FirebaseVersion = '10.2.1'
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
