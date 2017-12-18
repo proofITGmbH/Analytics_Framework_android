@@ -24,5 +24,5 @@ android {
 dependencies {
     implementation project(':stanwoodanalytics')
     implementation "com.android.support:support-annotations:$rootProject.ext.SupportLibVersion"
-    compile 'com.bugfender.sdk:android:0.8.4'
+    api 'com.bugfender.sdk:android:0.8.4'
 }
