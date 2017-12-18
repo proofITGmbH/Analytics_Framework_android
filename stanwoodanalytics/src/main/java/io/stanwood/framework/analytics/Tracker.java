@@ -7,10 +7,10 @@ import android.support.annotation.Nullable;
 
 public abstract class Tracker {
 
-    private boolean exceptionTrackingEnabled;
     protected boolean isDebug;
-    private int logLevel;
     protected Application context;
+    private boolean exceptionTrackingEnabled;
+    private int logLevel;
 
     protected Tracker(Builder builder) {
         this.context = builder.context;
@@ -63,7 +63,7 @@ public abstract class Tracker {
     public void debug(@Nullable TrackerParams params, @Nullable Throwable throwable) {
     }
 
-    public abstract static class Builder {
+    public abstract static class Builder<T extends Builder<T>> {
         private boolean isDebug = BuildConfig.DEBUG;
         private int logLevel = 0;
         private boolean exceptionTrackingEnabled = false;
@@ -73,22 +73,21 @@ public abstract class Tracker {
             this.context = context;
         }
 
-        public Builder setDebug(boolean enable) {
+        public T setDebug(boolean enable) {
             this.isDebug = enable;
-            return this;
+            return (T) this;
         }
 
-        public Builder setExceptionTrackingEnabled(boolean enabled) {
+        public T setExceptionTrackingEnabled(boolean enabled) {
             this.exceptionTrackingEnabled = enabled;
-            return this;
+            return (T) this;
         }
 
-        public Builder setLogLevel(int level) {
+        public T setLogLevel(int level) {
             this.logLevel = level;
-            return this;
+            return (T) this;
         }
 
         abstract public Tracker build();
-
     }
 }

@@ -8,5 +8,5 @@ public interface TrackingEvent {
     String VIEW_ITEM_LIST = "view_item_list";
     String VIEW_SEARCH_RESULTS = "view_search_results";
     String SHARE = "share";
-    String MESSAGE ="message";
+    String MESSAGE = "message";
 }
