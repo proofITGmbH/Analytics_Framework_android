@@ -22,14 +22,12 @@ android {
 
 }
 
-dependencies {
-    repositories {
-        maven { url 'https://maven.fabric.io/public' }
-    }
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
 
-    dependencies {
-        implementation project(':stanwoodanalytics')
-        implementation "com.android.support:support-annotations:$rootProject.ext.SupportLibVersion"
-        compile 'com.crashlytics.sdk.android:crashlytics:2.8.0'
-    }
+dependencies {
+    implementation project(':stanwoodanalytics')
+    implementation "com.android.support:support-annotations:$rootProject.ext.SupportLibVersion"
+    compile 'com.crashlytics.sdk.android:crashlytics:2.8.0'
 }
