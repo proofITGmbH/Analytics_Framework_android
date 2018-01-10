@@ -33,7 +33,7 @@ public class FabricTracker extends Tracker {
 
     @Override
     public void track(@NonNull TrackerParams params) {
-        Crashlytics.log(0, params.getEventName(), String.format("[%s] [%s]", params.getItemId(), params.getName()));
+        Crashlytics.log(0, params.getEventName(), String.format("[%s] [%s]", params.getName(), params.getItemId()));
     }
 
     @Override
