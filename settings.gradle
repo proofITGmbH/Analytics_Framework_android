@@ -1,1 +1,1 @@
-include ':app', ':firebasetrackingprovider', ':stanwoodanalytics', ':fabrictrackingprovider', ':bugfendertrackingprovider'
+include ':app', ':firebasetrackingprovider', ':stanwoodanalytics', ':fabrictrackingprovider', ':bugfendertrackingprovider', ':gatrackingprovider'

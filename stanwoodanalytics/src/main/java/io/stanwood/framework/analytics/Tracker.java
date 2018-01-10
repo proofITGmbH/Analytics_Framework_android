@@ -9,8 +9,8 @@ public abstract class Tracker {
 
     protected boolean isDebug;
     protected Application context;
-    private boolean exceptionTrackingEnabled;
-    private int logLevel;
+    protected boolean exceptionTrackingEnabled;
+    protected int logLevel;
 
     protected Tracker(Builder builder) {
         this.context = builder.context;
@@ -64,7 +64,7 @@ public abstract class Tracker {
     }
 
     public abstract static class Builder<T extends Builder<T>> {
-        private boolean isDebug = BuildConfig.DEBUG;
+        private boolean isDebug = false;
         private int logLevel = 0;
         private boolean exceptionTrackingEnabled = false;
         private Application context;
