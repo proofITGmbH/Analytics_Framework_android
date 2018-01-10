@@ -25,11 +25,11 @@ public class BaseAnalyticsTracker {
         return defaultInstance;
     }
 
-    public void screenView(@NonNull String screenName) {
+    public void trackScreenView(@NonNull String screenName) {
         trackerContainer.event(TrackerParams.builder(TrackingEvent.VIEW_ITEM).setName(screenName).build());
     }
 
-    public void exception(Throwable throwable) {
+    public void trackException(Throwable throwable) {
         trackerContainer.exception(throwable);
     }
 

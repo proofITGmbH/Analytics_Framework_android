@@ -9,7 +9,7 @@ public class AppTracker extends BaseAnalyticsTracker {
         super(container);
     }
 
-    public void specialEvent(String value) {
+    public void trackSpecialEvent(String value) {
         trackerContainer.event(TrackerParams.builder("special").setName(value).build());
     }
 }
