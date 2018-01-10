@@ -17,7 +17,7 @@ import io.stanwood.framework.analytics.TrackerParams;
 public class FirebaseTracker extends Tracker {
     private FirebaseAnalytics firebaseAnalytics;
 
-    FirebaseTracker(Tracker.Builder builder) {
+    protected FirebaseTracker(Tracker.Builder builder) {
         super(builder);
     }
 

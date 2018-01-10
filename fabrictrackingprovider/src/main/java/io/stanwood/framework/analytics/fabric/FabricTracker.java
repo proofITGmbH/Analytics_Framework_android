@@ -13,7 +13,7 @@ import io.stanwood.framework.analytics.Tracker;
 import io.stanwood.framework.analytics.TrackerParams;
 
 public class FabricTracker extends Tracker {
-    private FabricTracker(Builder builder) {
+    protected FabricTracker(Builder builder) {
         super(builder);
     }
 
