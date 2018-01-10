@@ -42,7 +42,7 @@ public class BugfenderTracker extends Tracker {
 
     @Override
     public void track(@NonNull TrackerParams params) {
-        Bugfender.d(params.getEventName(), String.format("[%s] [%s]", params.getItemId(), params.getName()));
+        Bugfender.d(params.getEventName(), String.format("[%s] [%s]", params.getName(), params.getItemId()));
     }
 
     @Override

@@ -8,6 +8,7 @@ import io.stanwood.framework.analytics.bugfender.BugfenderTracker;
 import io.stanwood.framework.analytics.fabric.FabricTracker;
 import io.stanwood.framework.analytics.firebase.FirebaseTracker;
 import io.stanwood.framework.analytics.ga.GoogleAnalyticsTracker;
+import io.stanwood.framework.analytics.mixpanel.MixpanelTracker;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -34,8 +35,10 @@ public class MainActivity extends AppCompatActivity {
                 .addTracker(GoogleAnalyticsTracker.builder(getApplication(), "KEY")
                         .setExceptionTrackingEnabled(true)
                         .setDebug(BuildConfig.DEBUG)
-                        .build()
-                )
+                        .build())
+                .addTracker(MixpanelTracker.builder(getApplication(), "KEY")
+                        .setDebug(BuildConfig.DEBUG)
+                        .build())
                 .build());
 
     }

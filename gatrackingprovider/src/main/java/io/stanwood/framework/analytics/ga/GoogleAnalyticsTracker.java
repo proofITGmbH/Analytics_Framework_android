@@ -16,12 +16,16 @@ import io.stanwood.framework.analytics.TrackerParams;
 public class GoogleAnalyticsTracker extends Tracker {
     private final String appKey;
     private final short sampleRate;
-
+    private final boolean activityTracking;
+    private final boolean adIdCollection;
+    private com.google.android.gms.analytics.Tracker tracker;
 
     private GoogleAnalyticsTracker(Builder builder) {
         super(builder);
         this.appKey = builder.appKey;
         this.sampleRate = builder.sampleRate;
+        this.activityTracking = builder.activityTracking;
+        this.adIdCollection = builder.adIdCollection;
     }
 
     @RequiresPermission(
@@ -31,14 +35,14 @@ public class GoogleAnalyticsTracker extends Tracker {
         return new Builder(context, appKey);
     }
 
-    private com.google.android.gms.analytics.Tracker tracker;
-
     @SuppressLint("MissingPermission")
     @Override
     protected void init() {
         tracker = GoogleAnalytics.getInstance(context).newTracker(appKey);
         tracker.enableExceptionReporting(exceptionTrackingEnabled);
         tracker.setSampleRate(sampleRate);
+        tracker.enableAutoActivityTracking(activityTracking);
+        tracker.enableAdvertisingIdCollection(adIdCollection);
     }
 
     @Override
@@ -58,10 +62,22 @@ public class GoogleAnalyticsTracker extends Tracker {
     public static class Builder extends Tracker.Builder {
         private short sampleRate = 100;
         private String appKey;
+        private boolean activityTracking = false;
+        private boolean adIdCollection = false;
 
         Builder(Application context, String appKey) {
             super(context);
             this.appKey = appKey;
+        }
+
+        private Builder autoActivityTracking(boolean enabled) {
+            this.activityTracking = enabled;
+            return this;
+        }
+
+        private Builder adIdCollection(boolean enabled) {
+            this.adIdCollection = enabled;
+            return this;
         }
 
         public Builder sampleRate(short sampleRate) {

@@ -33,6 +33,7 @@ dependencies {
     implementation project(':fabrictrackingprovider')
     implementation project(':bugfendertrackingprovider')
     implementation project(':gatrackingprovider')
+    implementation project(':mixpaneltrackingprovider')
     implementation 'com.android.support:appcompat-v7:26.1.0'
 
 }
