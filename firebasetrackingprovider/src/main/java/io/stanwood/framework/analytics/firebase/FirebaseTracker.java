@@ -11,6 +11,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 
 import io.stanwood.framework.analytics.Tracker;
+import io.stanwood.framework.analytics.TrackerKeys;
 import io.stanwood.framework.analytics.TrackerParams;
 
 public class FirebaseTracker extends Tracker {
@@ -52,6 +53,11 @@ public class FirebaseTracker extends Tracker {
         FirebaseCrash.report(throwable);
     }
 
+    @Override
+    public void track(@NonNull TrackerKeys keys) {
+        //noop
+    }
+
 
     public static class Builder extends Tracker.Builder<Builder> {
         private MapFunction mapFunc = null;
@@ -61,7 +67,7 @@ public class FirebaseTracker extends Tracker {
         }
 
         @Override
-        public Tracker build() {
+        public FirebaseTracker build() {
             return new FirebaseTracker(this);
         }
 

@@ -11,14 +11,13 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
 
-import java.util.Collection;
-
 import io.stanwood.framework.analytics.Tracker;
+import io.stanwood.framework.analytics.TrackerKeys;
 import io.stanwood.framework.analytics.TrackerParams;
 
 public class GoogleAnalyticsTracker extends Tracker {
     private final String appKey;
-    private final short sampleRate;
+    private final int sampleRate;
     private final boolean activityTracking;
     private final boolean adIdCollection;
     private final MapFunction mapFunc;
@@ -67,13 +66,6 @@ public class GoogleAnalyticsTracker extends Tracker {
                     builder.setLabel(label);
                 }
             }
-            Collection<String> values = mapFunc.mapCustomDimensions(params);
-            if (values != null) {
-                int i = 0;
-                for (String entry : values) {
-                    builder.setCustomDimension(i++, entry);
-                }
-            }
             tracker.send(builder.build());
         }
     }
@@ -87,9 +79,19 @@ public class GoogleAnalyticsTracker extends Tracker {
                 .build());
     }
 
+    @Override
+    public void track(@NonNull TrackerKeys keys) {
+        HitBuilders.EventBuilder builder = new HitBuilders.EventBuilder();
+        int i = 0;
+        for (Object entry : keys.getCustomKeys().values()) {
+            builder.setCustomDimension(i++, (String) entry);
+        }
+        tracker.send(builder.build());
+    }
+
 
     public static class Builder extends Tracker.Builder<Builder> {
-        private short sampleRate = 100;
+        private int sampleRate = 100;
         private String appKey;
         private boolean activityTracking = false;
         private boolean adIdCollection = false;
@@ -110,7 +112,7 @@ public class GoogleAnalyticsTracker extends Tracker {
             return this;
         }
 
-        public Builder sampleRate(short sampleRate) {
+        public Builder sampleRate(int sampleRate) {
             this.sampleRate = sampleRate;
             return this;
         }
@@ -120,7 +122,7 @@ public class GoogleAnalyticsTracker extends Tracker {
             return this;
         }
 
-        public Tracker build() {
+        public GoogleAnalyticsTracker build() {
             return new GoogleAnalyticsTracker(this);
         }
     }

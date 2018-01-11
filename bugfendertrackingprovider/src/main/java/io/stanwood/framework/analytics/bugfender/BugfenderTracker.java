@@ -8,6 +8,7 @@ import android.support.annotation.RequiresPermission;
 import com.bugfender.sdk.Bugfender;
 
 import io.stanwood.framework.analytics.Tracker;
+import io.stanwood.framework.analytics.TrackerKeys;
 import io.stanwood.framework.analytics.TrackerParams;
 
 public class BugfenderTracker extends Tracker {
@@ -50,6 +51,11 @@ public class BugfenderTracker extends Tracker {
         Bugfender.sendIssue("Exception", throwable.getMessage());
     }
 
+    @Override
+    public void track(@NonNull TrackerKeys keys) {
+        //noop
+    }
+
     public static class Builder extends Tracker.Builder<Builder> {
         private boolean enableUiLogging;
         private boolean enableLogcatLogging;
@@ -70,7 +76,7 @@ public class BugfenderTracker extends Tracker {
             return this;
         }
 
-        public Tracker build() {
+        public BugfenderTracker build() {
             return new BugfenderTracker(this);
         }
 

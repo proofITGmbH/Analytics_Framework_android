@@ -23,4 +23,8 @@ android {
 
 dependencies {
     implementation "com.android.support:support-annotations:$rootProject.ext.SupportLibVersion"
+    api project(':generictracker')
+    api project(':firebasetrackingprovider')
+    api project(':fabrictrackingprovider')
+    api project(':bugfendertrackingprovider')
 }

@@ -28,13 +28,12 @@ public abstract class Tracker {
     void trackEvent(@NonNull TrackerParams params) {
         if (isDebug) {
             if (logLevel > 0) {
-                debug(params, null);
+                debug(params);
             }
         } else {
             track(params);
         }
     }
-
 
     void trackException(@NonNull Throwable throwable) {
         if (!exceptionTrackingEnabled) {
@@ -42,10 +41,20 @@ public abstract class Tracker {
         }
         if (isDebug) {
             if (logLevel > 0) {
-                debug(null, throwable);
+                debug(throwable);
             }
         } else {
             track(throwable);
+        }
+    }
+
+    void trackCustomKeys(@NonNull TrackerKeys keys) {
+        if (isDebug) {
+            if (logLevel > 0) {
+                debug(keys);
+            }
+        } else {
+            track(keys);
         }
     }
 
@@ -53,7 +62,15 @@ public abstract class Tracker {
 
     public abstract void track(@NonNull Throwable throwable);
 
-    public void debug(@Nullable TrackerParams params, @Nullable Throwable throwable) {
+    public abstract void track(@NonNull TrackerKeys keys);
+
+    public void debug(@Nullable TrackerParams params) {
+    }
+
+    public void debug(@Nullable Throwable throwable) {
+    }
+
+    public void debug(@Nullable TrackerKeys keys) {
     }
 
     public abstract static class Builder<T extends Builder<T>> {

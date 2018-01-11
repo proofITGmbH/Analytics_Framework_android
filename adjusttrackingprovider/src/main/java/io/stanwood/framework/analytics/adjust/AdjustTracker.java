@@ -10,6 +10,7 @@ import com.adjust.sdk.AdjustConfig;
 import com.adjust.sdk.AdjustEvent;
 
 import io.stanwood.framework.analytics.Tracker;
+import io.stanwood.framework.analytics.TrackerKeys;
 import io.stanwood.framework.analytics.TrackerParams;
 
 public class AdjustTracker extends Tracker {
@@ -51,6 +52,11 @@ public class AdjustTracker extends Tracker {
         //noop
     }
 
+    @Override
+    public void track(@NonNull TrackerKeys keys) {
+        //noop
+    }
+
     public static class Builder extends Tracker.Builder<Builder> {
         private String appKey;
         private MapFunction mapFunc = null;
@@ -60,7 +66,7 @@ public class AdjustTracker extends Tracker {
             this.appKey = appKey;
         }
 
-        public Tracker build() {
+        public AdjustTracker build() {
             return new AdjustTracker(this);
         }
 
