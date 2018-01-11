@@ -1,1 +1,1 @@
-include ':app', ':firebasetrackingprovider', ':stanwoodanalytics', ':fabrictrackingprovider', ':bugfendertrackingprovider', ':gatrackingprovider', ':mixpaneltrackingprovider'
+include ':app', ':firebasetrackingprovider', ':stanwoodanalytics', ':fabrictrackingprovider', ':bugfendertrackingprovider', ':gatrackingprovider', ':mixpaneltrackingprovider', ':adjusttrackingprovider'

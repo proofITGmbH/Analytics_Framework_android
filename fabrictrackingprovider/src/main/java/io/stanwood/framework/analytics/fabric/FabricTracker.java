@@ -41,7 +41,7 @@ public class FabricTracker extends Tracker {
         Crashlytics.logException(throwable);
     }
 
-    public static class Builder extends Tracker.Builder {
+    public static class Builder extends Tracker.Builder<Builder> {
         Builder(Application context) {
             super(context);
         }

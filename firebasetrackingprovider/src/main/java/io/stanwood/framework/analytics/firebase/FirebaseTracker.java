@@ -6,7 +6,6 @@ import android.app.Application;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresPermission;
-import android.text.TextUtils;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
@@ -15,10 +14,16 @@ import io.stanwood.framework.analytics.Tracker;
 import io.stanwood.framework.analytics.TrackerParams;
 
 public class FirebaseTracker extends Tracker {
+    private final MapFunction mapFunc;
     private FirebaseAnalytics firebaseAnalytics;
 
-    protected FirebaseTracker(Tracker.Builder builder) {
+    protected FirebaseTracker(Builder builder) {
         super(builder);
+        if (builder.mapFunc == null) {
+            mapFunc = new DefaultMapFunction();
+        } else {
+            mapFunc = builder.mapFunc;
+        }
     }
 
     @RequiresPermission(
@@ -36,7 +41,10 @@ public class FirebaseTracker extends Tracker {
 
     @Override
     public void track(@NonNull TrackerParams params) {
-        firebaseAnalytics.logEvent(params.getEventName(), createBundle(params));
+        Bundle mapped = mapFunc.map(params);
+        if (mapped != null) {
+            firebaseAnalytics.logEvent(params.getEventName(), mapFunc.map(params));
+        }
     }
 
     @Override
@@ -44,24 +52,9 @@ public class FirebaseTracker extends Tracker {
         FirebaseCrash.report(throwable);
     }
 
-    private Bundle createBundle(TrackerParams params) {
-        Bundle bundle = new Bundle();
-        if (!TextUtils.isEmpty(params.getItemId())) {
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, params.getItemId());
-        }
-        if (!TextUtils.isEmpty(params.getCategory())) {
-            bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, params.getCategory());
-        }
-        if (!TextUtils.isEmpty(params.getContentType())) {
-            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, params.getContentType());
-        }
-        if (!TextUtils.isEmpty(params.getName())) {
-            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, params.getName());
-        }
-        return bundle;
-    }
 
-    public static class Builder extends Tracker.Builder {
+    public static class Builder extends Tracker.Builder<Builder> {
+        private MapFunction mapFunc = null;
 
         Builder(Application context) {
             super(context);
@@ -70,6 +63,11 @@ public class FirebaseTracker extends Tracker {
         @Override
         public Tracker build() {
             return new FirebaseTracker(this);
+        }
+
+        public Builder mapFunction(MapFunction func) {
+            this.mapFunc = func;
+            return this;
         }
     }
 

@@ -26,9 +26,6 @@ public abstract class Tracker {
 
 
     void trackEvent(@NonNull TrackerParams params) {
-        if (!shouldTrack(params)) {
-            return;
-        }
         if (isDebug) {
             if (logLevel > 0) {
                 debug(params, null);
@@ -50,10 +47,6 @@ public abstract class Tracker {
         } else {
             track(throwable);
         }
-    }
-
-    protected boolean shouldTrack(@NonNull TrackerParams params) {
-        return true;
     }
 
     public abstract void track(@NonNull TrackerParams params);
