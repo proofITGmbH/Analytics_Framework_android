@@ -75,7 +75,7 @@ public class FabricTracker extends Tracker {
             super(context);
         }
 
-        public Tracker build() {
+        public FabricTracker build() {
             return new FabricTracker(this);
         }
 

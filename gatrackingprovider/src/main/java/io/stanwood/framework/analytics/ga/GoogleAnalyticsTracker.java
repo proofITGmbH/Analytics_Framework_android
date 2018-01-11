@@ -122,7 +122,7 @@ public class GoogleAnalyticsTracker extends Tracker {
             return this;
         }
 
-        public Tracker build() {
+        public GoogleAnalyticsTracker build() {
             return new GoogleAnalyticsTracker(this);
         }
     }

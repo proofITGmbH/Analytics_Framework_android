@@ -76,7 +76,7 @@ public class BugfenderTracker extends Tracker {
             return this;
         }
 
-        public Tracker build() {
+        public BugfenderTracker build() {
             return new BugfenderTracker(this);
         }
 

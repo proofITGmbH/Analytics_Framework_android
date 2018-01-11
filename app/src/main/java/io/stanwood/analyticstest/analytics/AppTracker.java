@@ -2,39 +2,33 @@ package io.stanwood.analyticstest.analytics;
 
 import android.app.Application;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import io.stanwood.framework.analytics.BaseAnalyticsTracker;
 import io.stanwood.framework.analytics.Tracker;
-import io.stanwood.framework.analytics.TrackerContainer;
 import io.stanwood.framework.analytics.TrackerKeys;
 import io.stanwood.framework.analytics.TrackerParams;
 import io.stanwood.framework.analytics.TrackingEvent;
 import io.stanwood.framework.analytics.adjust.AdjustTracker;
+import io.stanwood.framework.analytics.bugfender.BugfenderTracker;
+import io.stanwood.framework.analytics.fabric.FabricTracker;
 import io.stanwood.framework.analytics.firebase.FirebaseTracker;
 import io.stanwood.framework.analytics.firebase.MapFunction;
-import io.stanwood.framework.analytics.ga.DefaultMapFunction;
 import io.stanwood.framework.analytics.ga.GoogleAnalyticsTracker;
 import io.stanwood.framework.analytics.mixpanel.MixpanelTracker;
 
 public class AppTracker extends BaseAnalyticsTracker {
     private static AppTracker instance;
-    private final TrackerContainer adTrackerContainer;
 
-    private AppTracker(TrackerContainer container, TrackerContainer adTrackerContainer) {
-        super(container);
-        this.adTrackerContainer = adTrackerContainer;
+    private AppTracker(FabricTracker fabricTracker, FirebaseTracker firebaseTracker, BugfenderTracker bugfenderTracker, Tracker... optional) {
+        super(fabricTracker, firebaseTracker, bugfenderTracker, optional);
     }
 
     public static synchronized void init(Application application) {
         if (instance == null) {
-            Tracker firebaseTracker = FirebaseTracker.builder(application)
+            FirebaseTracker firebaseTracker = FirebaseTracker.builder(application)
                     .setExceptionTrackingEnabled(true)
                     .setDebug(BuildConfig.DEBUG)
                     .mapFunction(new MapFunction() {
@@ -75,25 +69,10 @@ public class AppTracker extends BaseAnalyticsTracker {
             Tracker gaTracker = GoogleAnalyticsTracker.builder(application, "KEY")
                     .setExceptionTrackingEnabled(true)
                     .setDebug(BuildConfig.DEBUG)
-                    .mapFunction(new DefaultMapFunction() {
-                        @Nullable
-                        @Override
-                        public Collection<String> mapCustomDimensions(TrackerParams params) {
-                            if (!TextUtils.isEmpty(params.getContentType())) {
-                                return Collections.singletonList(params.getContentType());
-                            }
-                            return null;
-                        }
-                    })
                     .build();
-            TrackerContainer defaultContainer = TrackerContainer.builder().addTracker(firebaseTracker, adjustTracker, mixpanelTracker, gaTracker).build();
-            Tracker sampledGaTracker = GoogleAnalyticsTracker.builder(application, "KEY")
-                    .sampleRate(10)
-                    .setExceptionTrackingEnabled(false)
-                    .setDebug(BuildConfig.DEBUG)
-                    .build();
-            TrackerContainer sampledContainer = TrackerContainer.builder().addTracker(sampledGaTracker).build();
-            instance = new AppTracker(defaultContainer, sampledContainer);
+            FabricTracker fabricTracker = FabricTracker.builder(application).setDebug(BuildConfig.DEBUG).build();
+            BugfenderTracker bugfenderTracker = BugfenderTracker.builder(application, "KEY").setDebug(!BuildConfig.DEBUG).build();
+            instance = new AppTracker(fabricTracker, firebaseTracker, bugfenderTracker, mixpanelTracker, adjustTracker, gaTracker);
         }
     }
 
@@ -105,11 +84,11 @@ public class AppTracker extends BaseAnalyticsTracker {
     }
 
     public void trackAdLoaded(String adId) {
-        adTrackerContainer.trackEvent(TrackerParams.builder("ad").setName("loaded").setId(adId).build());
+        trackParameter(TrackerParams.builder("ad").setName("loaded").setId(adId).build());
     }
 
     public void trackShowDetails(String id, String name) {
-        trackerContainer.trackKeys(TrackerKeys.builder().addCustomProperty("id", id).addCustomProperty("name", name).build());
+        trackKeys(TrackerKeys.builder().addCustomProperty("id", id).addCustomProperty("name", name).build());
         trackScreenView("details");
     }
 }

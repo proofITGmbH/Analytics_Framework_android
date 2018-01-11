@@ -66,7 +66,7 @@ public class AdjustTracker extends Tracker {
             this.appKey = appKey;
         }
 
-        public Tracker build() {
+        public AdjustTracker build() {
             return new AdjustTracker(this);
         }
 

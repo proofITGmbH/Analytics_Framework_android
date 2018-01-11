@@ -67,7 +67,7 @@ public class FirebaseTracker extends Tracker {
         }
 
         @Override
-        public Tracker build() {
+        public FirebaseTracker build() {
             return new FirebaseTracker(this);
         }
 

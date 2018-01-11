@@ -43,12 +43,13 @@ public class TrackerContainer {
     public static class Builder {
         private List<Tracker> trackers = new ArrayList<>();
 
-        public Builder addTracker(Tracker tracker) {
+
+        public Builder addTracker(@NonNull Tracker tracker) {
             this.trackers.add(tracker);
             return this;
         }
 
-        public Builder addTracker(Tracker... trackers) {
+        public Builder addTracker(@NonNull Tracker... trackers) {
             Collections.addAll(this.trackers, trackers);
             return this;
         }

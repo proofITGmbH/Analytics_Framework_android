@@ -76,7 +76,7 @@ public class MixpanelTracker extends Tracker {
             this.appKey = appKey;
         }
 
-        public Tracker build() {
+        public MixpanelTracker build() {
             return new MixpanelTracker(this);
         }
 

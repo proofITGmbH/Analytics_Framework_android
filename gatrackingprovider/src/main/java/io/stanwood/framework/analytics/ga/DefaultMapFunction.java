@@ -5,8 +5,6 @@ import android.support.annotation.Nullable;
 
 import java.util.Collection;
 
-import io.stanwood.framework.analytics.TrackerParams;
-
 public class DefaultMapFunction implements MapFunction {
     @Nullable
     @Override

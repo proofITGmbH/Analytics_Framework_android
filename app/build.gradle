@@ -29,9 +29,6 @@ buildscript {
 
 dependencies {
     implementation project(':stanwoodanalytics')
-    implementation project(':firebasetrackingprovider')
-    implementation project(':fabrictrackingprovider')
-    implementation project(':bugfendertrackingprovider')
     implementation project(':gatrackingprovider')
     implementation project(':mixpaneltrackingprovider')
     implementation project(':adjusttrackingprovider')

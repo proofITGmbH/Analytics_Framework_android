@@ -1,7 +1,5 @@
 package io.stanwood.framework.analytics.adjust;
 
-import io.stanwood.framework.analytics.TrackerParams;
-
 public class DefaultMapFunction implements MapFunction {
 
     @Override
