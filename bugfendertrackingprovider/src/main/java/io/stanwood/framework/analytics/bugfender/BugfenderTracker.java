@@ -15,7 +15,7 @@ public class BugfenderTracker extends Tracker {
     private final boolean enableUiLogging;
     private final boolean enableLogcatLogging;
 
-    private BugfenderTracker(Builder builder) {
+    protected BugfenderTracker(Builder builder) {
         super(builder);
         this.appKey = builder.appKey;
         this.enableUiLogging = builder.enableUiLogging;

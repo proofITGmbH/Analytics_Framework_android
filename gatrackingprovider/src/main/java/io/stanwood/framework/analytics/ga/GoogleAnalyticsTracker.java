@@ -20,7 +20,7 @@ public class GoogleAnalyticsTracker extends Tracker {
     private final boolean adIdCollection;
     private com.google.android.gms.analytics.Tracker tracker;
 
-    private GoogleAnalyticsTracker(Builder builder) {
+    protected GoogleAnalyticsTracker(Builder builder) {
         super(builder);
         this.appKey = builder.appKey;
         this.sampleRate = builder.sampleRate;
