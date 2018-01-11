@@ -17,7 +17,7 @@ public class FirebaseTracker extends Tracker {
     private final MapFunction mapFunc;
     private FirebaseAnalytics firebaseAnalytics;
 
-    FirebaseTracker(Builder builder) {
+    protected FirebaseTracker(Builder builder) {
         super(builder);
         if (builder.mapFunc == null) {
             mapFunc = new DefaultMapFunction();

@@ -18,7 +18,7 @@ public class MixpanelTracker extends Tracker {
     private final MapFunction mapFunc;
     private MixpanelAPI mixpanelAPI;
 
-    private MixpanelTracker(Builder builder) {
+    protected MixpanelTracker(Builder builder) {
         super(builder);
         this.appKey = builder.appKey;
         if (builder.mapFunc == null) {

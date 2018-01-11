@@ -24,7 +24,7 @@ public class GoogleAnalyticsTracker extends Tracker {
     private final MapFunction mapFunc;
     private com.google.android.gms.analytics.Tracker tracker;
 
-    private GoogleAnalyticsTracker(Builder builder) {
+    protected GoogleAnalyticsTracker(Builder builder) {
         super(builder);
         this.appKey = builder.appKey;
         this.sampleRate = builder.sampleRate;
