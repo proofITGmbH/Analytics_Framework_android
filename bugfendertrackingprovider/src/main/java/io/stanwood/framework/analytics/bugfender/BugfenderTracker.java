@@ -50,7 +50,7 @@ public class BugfenderTracker extends Tracker {
         Bugfender.sendIssue("Exception", throwable.getMessage());
     }
 
-    public static class Builder extends Tracker.Builder {
+    public static class Builder extends Tracker.Builder<Builder> {
         private boolean enableUiLogging;
         private boolean enableLogcatLogging;
         private String appKey;

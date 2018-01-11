@@ -2,12 +2,16 @@ package io.stanwood.framework.analytics;
 
 import android.support.annotation.NonNull;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TrackerParams {
     private final String eventName;
     private String itemId;
     private String name;
     private String category;
     private String contentType;
+    private Map<String, String> customProps;
 
     private TrackerParams(@NonNull Builder builder) {
         eventName = builder.eventName;
@@ -15,6 +19,7 @@ public class TrackerParams {
         name = builder.name;
         category = builder.category;
         contentType = builder.contentType;
+        customProps = builder.customProps;
     }
 
     public static Builder builder(String eventName) {
@@ -27,6 +32,10 @@ public class TrackerParams {
 
     public String getItemId() {
         return itemId;
+    }
+
+    public Map<String, String> getCustomPropertys() {
+        return customProps;
     }
 
     public String getName() {
@@ -58,6 +67,7 @@ public class TrackerParams {
         private String name = null;
         private String category = null;
         private String contentType = null;
+        private Map<String, String> customProps;
 
         Builder(@NonNull String eventName) {
             this.eventName = eventName;
@@ -80,6 +90,14 @@ public class TrackerParams {
 
         public Builder setContentType(String contentType) {
             this.contentType = contentType;
+            return this;
+        }
+
+        public Builder addCustomProperty(String key, String value) {
+            if (customProps == null) {
+                customProps = new HashMap<>();
+            }
+            customProps.put(key, value);
             return this;
         }
 

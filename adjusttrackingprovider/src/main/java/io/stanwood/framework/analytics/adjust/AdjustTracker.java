@@ -1,24 +1,22 @@
-package io.stanwood.framework.analytics.mixpanel;
+package io.stanwood.framework.analytics.adjust;
 
 
 import android.app.Application;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
-
-import org.json.JSONObject;
-
-import java.util.Map;
+import com.adjust.sdk.Adjust;
+import com.adjust.sdk.AdjustConfig;
+import com.adjust.sdk.AdjustEvent;
 
 import io.stanwood.framework.analytics.Tracker;
 import io.stanwood.framework.analytics.TrackerParams;
 
-public class MixpanelTracker extends Tracker {
+public class AdjustTracker extends Tracker {
     private final String appKey;
     private final MapFunction mapFunc;
-    private MixpanelAPI mixpanelAPI;
 
-    private MixpanelTracker(Builder builder) {
+    private AdjustTracker(Builder builder) {
         super(builder);
         this.appKey = builder.appKey;
         if (builder.mapFunc == null) {
@@ -34,15 +32,17 @@ public class MixpanelTracker extends Tracker {
 
     @Override
     protected void init() {
-        mixpanelAPI = MixpanelAPI.getInstance(context, appKey);
+        String environment = isDebug ? AdjustConfig.ENVIRONMENT_SANDBOX : AdjustConfig.ENVIRONMENT_PRODUCTION;
+        AdjustConfig config = new AdjustConfig(context, appKey, environment);
+        Adjust.onCreate(config);
     }
 
     @Override
     public void track(@NonNull TrackerParams params) {
-        Map<String, String> mapped = mapFunc.map(params);
-        if (mapped != null && !mapped.isEmpty()) {
-            JSONObject props = new JSONObject(mapped);
-            mixpanelAPI.track(params.getEventName(), props);
+        String eventToken = mapFunc.mapContentToken(params);
+        if (!TextUtils.isEmpty(eventToken)) {
+            AdjustEvent event = new AdjustEvent(eventToken);
+            Adjust.trackEvent(event);
         }
     }
 
@@ -61,13 +61,12 @@ public class MixpanelTracker extends Tracker {
         }
 
         public Tracker build() {
-            return new MixpanelTracker(this);
+            return new AdjustTracker(this);
         }
 
         public Builder mapFunction(MapFunction func) {
             this.mapFunc = func;
             return this;
         }
-
     }
 }

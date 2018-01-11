@@ -1,0 +1,31 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+android {
+    compileSdkVersion project.ext.CompileSdkVersion
+
+    defaultConfig {
+        minSdkVersion project.ext.MinSdkVersion
+        targetSdkVersion project.ext.TargetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+        }
+    }
+
+}
+
+dependencies {
+    implementation project(':stanwoodanalytics')
+    implementation "com.android.support:support-annotations:$rootProject.ext.SupportLibVersion"
+    implementation "com.google.android.gms:play-services-analytics:$rootProject.ext.FirebaseVersion"
+    implementation 'com.adjust.sdk:adjust-android:4.12.0'
+    implementation 'com.android.installreferrer:installreferrer:1.0'
+}
+
