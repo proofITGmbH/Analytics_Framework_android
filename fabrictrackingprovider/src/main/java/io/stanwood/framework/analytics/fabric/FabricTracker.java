@@ -8,8 +8,11 @@ import android.support.annotation.RequiresPermission;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 
+import java.util.Map;
+
 import io.fabric.sdk.android.Fabric;
 import io.stanwood.framework.analytics.Tracker;
+import io.stanwood.framework.analytics.TrackerKeys;
 import io.stanwood.framework.analytics.TrackerParams;
 
 public class FabricTracker extends Tracker {
@@ -39,6 +42,32 @@ public class FabricTracker extends Tracker {
     @Override
     public void track(@NonNull Throwable throwable) {
         Crashlytics.logException(throwable);
+    }
+
+    @Override
+    public void track(@NonNull TrackerKeys keys) {
+        for (Map.Entry<String, Object> entry : keys.getCustomKeys().entrySet()) {
+            if (entry.getValue() == null) {
+                continue;
+            }
+            if (entry.getKey().equals("id")) {
+                Crashlytics.setUserIdentifier((String) entry.getValue());
+            } else if (entry.getKey().equals("email")) {
+                Crashlytics.setUserEmail((String) entry.getValue());
+            } else if (String.class.isInstance(entry.getValue())) {
+                Crashlytics.setString(entry.getKey(), (String) entry.getValue());
+            } else if (Integer.class.isInstance(entry.getValue())) {
+                Crashlytics.setInt(entry.getKey(), (Integer) entry.getValue());
+            } else if (Boolean.class.isInstance(entry.getValue())) {
+                Crashlytics.setBool(entry.getKey(), (Boolean) entry.getValue());
+            } else if (Long.class.isInstance(entry.getValue())) {
+                Crashlytics.setLong(entry.getKey(), (Long) entry.getValue());
+            } else if (Float.class.isInstance(entry.getValue())) {
+                Crashlytics.setFloat(entry.getKey(), (Float) entry.getValue());
+            } else if (Double.class.isInstance(entry.getValue())) {
+                Crashlytics.setDouble(entry.getKey(), (Double) entry.getValue());
+            }
+        }
     }
 
     public static class Builder extends Tracker.Builder<Builder> {

@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import java.util.Map;
 
 import io.stanwood.framework.analytics.Tracker;
+import io.stanwood.framework.analytics.TrackerKeys;
 import io.stanwood.framework.analytics.TrackerParams;
 
 public class MixpanelTracker extends Tracker {
@@ -49,6 +50,21 @@ public class MixpanelTracker extends Tracker {
     @Override
     public void track(@NonNull Throwable throwable) {
         //noop
+    }
+
+    @Override
+    public void track(@NonNull TrackerKeys keys) {
+        MixpanelAPI.People p = mixpanelAPI.getPeople();
+        for (Map.Entry<String, Object> entry : keys.getCustomKeys().entrySet()) {
+            String key = entry.getKey();
+            if (key.equalsIgnoreCase("email")) {
+                p.set("$email", entry.getValue());
+            } else if (key.equalsIgnoreCase("id")) {
+                p.identify((String) entry.getValue());
+            } else {
+                p.set(key, entry.getValue());
+            }
+        }
     }
 
     public static class Builder extends Tracker.Builder<Builder> {

@@ -19,17 +19,24 @@ public class TrackerContainer {
         return new Builder();
     }
 
-    public void event(@NonNull TrackerParams eventName) {
+    public void trackEvent(@NonNull TrackerParams eventName) {
         Tracker[] trackers = trackersArray;
         for (int i = 0, count = trackers.length; i < count; i++) {
             trackers[i].trackEvent(eventName);
         }
     }
 
-    public void exception(@NonNull Throwable throwable) {
+    public void trackException(@NonNull Throwable throwable) {
         Tracker[] trackers = trackersArray;
         for (int i = 0, count = trackers.length; i < count; i++) {
             trackers[i].trackException(throwable);
+        }
+    }
+
+    public void trackKeys(@NonNull TrackerKeys keys) {
+        Tracker[] trackers = trackersArray;
+        for (int i = 0, count = trackers.length; i < count; i++) {
+            trackers[i].track(keys);
         }
     }
 
