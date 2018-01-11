@@ -16,7 +16,7 @@ public class AdjustTracker extends Tracker {
     private final String appKey;
     private final MapFunction mapFunc;
 
-    private AdjustTracker(Builder builder) {
+    protected AdjustTracker(Builder builder) {
         super(builder);
         this.appKey = builder.appKey;
         if (builder.mapFunc == null) {
