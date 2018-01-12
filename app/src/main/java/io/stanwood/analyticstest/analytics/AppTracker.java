@@ -5,10 +5,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.firebase.perf.FirebasePerformance;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import io.stanwood.framework.analytics.BaseAnalyticsTracker;
+import io.stanwood.framework.analytics.TrackerTree;
 import io.stanwood.framework.analytics.adjust.AdjustTracker;
 import io.stanwood.framework.analytics.bugfender.BugfenderTracker;
 import io.stanwood.framework.analytics.fabric.FabricTracker;
@@ -20,6 +23,7 @@ import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingEvent;
 import io.stanwood.framework.analytics.mixpanel.MixpanelTracker;
+import timber.log.Timber;
 
 public class AppTracker extends BaseAnalyticsTracker {
     private static AppTracker instance;
@@ -27,6 +31,9 @@ public class AppTracker extends BaseAnalyticsTracker {
     private AppTracker(@NonNull FabricTracker fabricTracker, @NonNull FirebaseTracker firebaseTracker,
                        @NonNull BugfenderTracker bugfenderTracker, @Nullable Tracker... optional) {
         super(fabricTracker, firebaseTracker, bugfenderTracker, optional);
+        if (!BuildConfig.DEBUG) {
+            Timber.plant(new TrackerTree(this));
+        }
     }
 
     public static synchronized void init(Application application) {
@@ -76,6 +83,7 @@ public class AppTracker extends BaseAnalyticsTracker {
             FabricTracker fabricTracker = FabricTracker.builder(application).setDebug(BuildConfig.DEBUG).build();
             BugfenderTracker bugfenderTracker = BugfenderTracker.builder(application, "KEY").setDebug(!BuildConfig.DEBUG).build();
             instance = new AppTracker(fabricTracker, firebaseTracker, bugfenderTracker, mixpanelTracker, adjustTracker, gaTracker);
+            FirebasePerformance.getInstance().setPerformanceCollectionEnabled(!BuildConfig.DEBUG);
         }
     }
 

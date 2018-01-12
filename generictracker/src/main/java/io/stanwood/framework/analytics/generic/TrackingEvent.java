@@ -9,4 +9,5 @@ public interface TrackingEvent {
     String VIEW_SEARCH_RESULTS = "view_search_results";
     String SHARE = "share";
     String MESSAGE = "message";
+    String DEBUG = "debug";
 }

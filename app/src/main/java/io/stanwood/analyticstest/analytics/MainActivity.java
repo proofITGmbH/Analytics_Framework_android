@@ -3,6 +3,8 @@ package io.stanwood.analyticstest.analytics;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import timber.log.Timber;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,5 +21,7 @@ public class MainActivity extends AppCompatActivity {
         AppTracker.instance().trackAdLoaded("123456");
         AppTracker.instance().trackShowDetails("id", "details of id");
         AppTracker.instance().trackException(new IllegalStateException("error"));
+        Timber.d("message");
+        Timber.e(new IllegalStateException("error"));
     }
 }

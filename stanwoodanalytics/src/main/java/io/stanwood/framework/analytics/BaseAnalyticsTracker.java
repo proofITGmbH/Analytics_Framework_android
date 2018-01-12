@@ -12,6 +12,7 @@ import io.stanwood.framework.analytics.generic.TrackerContainer;
 import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingEvent;
+import timber.log.Timber;
 
 public class BaseAnalyticsTracker {
     private final TrackerContainer trackerContainer;
