@@ -108,12 +108,12 @@ public class GoogleAnalyticsTracker extends Tracker {
             this.appKey = appKey;
         }
 
-        private Builder autoActivityTracking(boolean enabled) {
+        public Builder autoActivityTracking(boolean enabled) {
             this.activityTracking = enabled;
             return this;
         }
 
-        private Builder adIdCollection(boolean enabled) {
+        public Builder adIdCollection(boolean enabled) {
             this.adIdCollection = enabled;
             return this;
         }
