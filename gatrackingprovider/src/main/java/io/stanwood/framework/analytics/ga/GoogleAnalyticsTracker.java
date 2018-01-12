@@ -11,9 +11,9 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
 
-import io.stanwood.framework.analytics.Tracker;
-import io.stanwood.framework.analytics.TrackerKeys;
-import io.stanwood.framework.analytics.TrackerParams;
+import io.stanwood.framework.analytics.generic.Tracker;
+import io.stanwood.framework.analytics.generic.TrackerKeys;
+import io.stanwood.framework.analytics.generic.TrackerParams;
 
 public class GoogleAnalyticsTracker extends Tracker {
     private final String appKey;
@@ -55,18 +55,24 @@ public class GoogleAnalyticsTracker extends Tracker {
 
     @Override
     public void track(@NonNull TrackerParams params) {
-        String category = mapFunc.mapCategory(params);
-        if (!TextUtils.isEmpty(category)) {
-            HitBuilders.EventBuilder builder = new HitBuilders.EventBuilder().setCategory(category);
-            String action = mapFunc.mapAction(params);
-            if (!TextUtils.isEmpty(action)) {
-                builder.setAction(action);
-                String label = mapFunc.mapLabel(params);
-                if (!TextUtils.isEmpty(label)) {
-                    builder.setLabel(label);
+        String screenName = mapFunc.mapScreenName(params);
+        if (!TextUtils.isEmpty(screenName)) {
+            tracker.setScreenName(screenName);
+            tracker.send(new HitBuilders.ScreenViewBuilder().build());
+        } else {
+            String category = mapFunc.mapCategory(params);
+            if (!TextUtils.isEmpty(category)) {
+                HitBuilders.EventBuilder builder = new HitBuilders.EventBuilder().setCategory(category);
+                String action = mapFunc.mapAction(params);
+                if (!TextUtils.isEmpty(action)) {
+                    builder.setAction(action);
+                    String label = mapFunc.mapLabel(params);
+                    if (!TextUtils.isEmpty(label)) {
+                        builder.setLabel(label);
+                    }
                 }
+                tracker.send(builder.build());
             }
-            tracker.send(builder.build());
         }
     }
 

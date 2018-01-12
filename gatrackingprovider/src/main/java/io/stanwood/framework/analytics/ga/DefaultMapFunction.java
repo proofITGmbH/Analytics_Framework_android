@@ -3,7 +3,8 @@ package io.stanwood.framework.analytics.ga;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.util.Collection;
+import io.stanwood.framework.analytics.generic.TrackerParams;
+import io.stanwood.framework.analytics.generic.TrackingEvent;
 
 public class DefaultMapFunction implements MapFunction {
     @Nullable
@@ -26,7 +27,10 @@ public class DefaultMapFunction implements MapFunction {
 
     @Nullable
     @Override
-    public Collection<String> mapCustomDimensions(TrackerParams params) {
-        return params.getCustomPropertys() != null ? params.getCustomPropertys().values() : null;
+    public String mapScreenName(@NonNull TrackerParams params) {
+        if (params.getEventName().equalsIgnoreCase(TrackingEvent.VIEW_ITEM)) {
+            return params.getName();
+        }
+        return null;
     }
 }

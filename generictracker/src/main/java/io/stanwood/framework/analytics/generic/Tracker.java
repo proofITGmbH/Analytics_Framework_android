@@ -1,4 +1,4 @@
-package io.stanwood.framework.analytics;
+package io.stanwood.framework.analytics.generic;
 
 
 import android.app.Application;

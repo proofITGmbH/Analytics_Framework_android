@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.stanwood.framework.analytics.TrackerParams;
+import io.stanwood.framework.analytics.generic.TrackerParams;
 
 public class DefaultMapFunction implements MapFunction {
 

@@ -9,9 +9,9 @@ import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustConfig;
 import com.adjust.sdk.AdjustEvent;
 
-import io.stanwood.framework.analytics.Tracker;
-import io.stanwood.framework.analytics.TrackerKeys;
-import io.stanwood.framework.analytics.TrackerParams;
+import io.stanwood.framework.analytics.generic.Tracker;
+import io.stanwood.framework.analytics.generic.TrackerKeys;
+import io.stanwood.framework.analytics.generic.TrackerParams;
 
 public class AdjustTracker extends Tracker {
     private final String appKey;

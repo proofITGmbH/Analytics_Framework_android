@@ -11,9 +11,9 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import java.util.Map;
 
 import io.fabric.sdk.android.Fabric;
-import io.stanwood.framework.analytics.Tracker;
-import io.stanwood.framework.analytics.TrackerKeys;
-import io.stanwood.framework.analytics.TrackerParams;
+import io.stanwood.framework.analytics.generic.Tracker;
+import io.stanwood.framework.analytics.generic.TrackerKeys;
+import io.stanwood.framework.analytics.generic.TrackerParams;
 
 public class FabricTracker extends Tracker {
     protected FabricTracker(Builder builder) {
@@ -54,17 +54,17 @@ public class FabricTracker extends Tracker {
                 Crashlytics.setUserIdentifier((String) entry.getValue());
             } else if (entry.getKey().equals("email")) {
                 Crashlytics.setUserEmail((String) entry.getValue());
-            } else if (String.class.isInstance(entry.getValue())) {
+            } else if (entry.getValue() instanceof String) {
                 Crashlytics.setString(entry.getKey(), (String) entry.getValue());
-            } else if (Integer.class.isInstance(entry.getValue())) {
+            } else if (entry.getValue() instanceof Integer) {
                 Crashlytics.setInt(entry.getKey(), (Integer) entry.getValue());
-            } else if (Boolean.class.isInstance(entry.getValue())) {
+            } else if (entry.getValue() instanceof Boolean) {
                 Crashlytics.setBool(entry.getKey(), (Boolean) entry.getValue());
-            } else if (Long.class.isInstance(entry.getValue())) {
+            } else if (entry.getValue() instanceof Long) {
                 Crashlytics.setLong(entry.getKey(), (Long) entry.getValue());
-            } else if (Float.class.isInstance(entry.getValue())) {
+            } else if (entry.getValue() instanceof Float) {
                 Crashlytics.setFloat(entry.getKey(), (Float) entry.getValue());
-            } else if (Double.class.isInstance(entry.getValue())) {
+            } else if (entry.getValue() instanceof Double) {
                 Crashlytics.setDouble(entry.getKey(), (Double) entry.getValue());
             }
         }
