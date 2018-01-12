@@ -36,7 +36,7 @@ public class TrackerContainer {
     public void trackKeys(@NonNull TrackerKeys keys) {
         Tracker[] trackers = trackersArray;
         for (int i = 0, count = trackers.length; i < count; i++) {
-            trackers[i].track(keys);
+            trackers[i].trackCustomKeys(keys);
         }
     }
 
