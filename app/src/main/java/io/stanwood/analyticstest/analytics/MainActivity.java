@@ -10,6 +10,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
+
+    void samples() {
         AppTracker.init(getApplication());
         AppTracker.instance().trackUser("666-666", "go@to.hell");
         AppTracker.instance().trackScreenView("home");

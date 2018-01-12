@@ -10,9 +10,9 @@ import android.support.annotation.RequiresPermission;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 
-import io.stanwood.framework.analytics.Tracker;
-import io.stanwood.framework.analytics.TrackerKeys;
-import io.stanwood.framework.analytics.TrackerParams;
+import io.stanwood.framework.analytics.generic.Tracker;
+import io.stanwood.framework.analytics.generic.TrackerKeys;
+import io.stanwood.framework.analytics.generic.TrackerParams;
 
 public class FirebaseTracker extends Tracker {
     private final MapFunction mapFunc;

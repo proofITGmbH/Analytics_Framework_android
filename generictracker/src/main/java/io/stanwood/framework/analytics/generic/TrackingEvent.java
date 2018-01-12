@@ -1,4 +1,4 @@
-package io.stanwood.framework.analytics;
+package io.stanwood.framework.analytics.generic;
 
 public interface TrackingEvent {
     String VIEW_ITEM = "view_item";

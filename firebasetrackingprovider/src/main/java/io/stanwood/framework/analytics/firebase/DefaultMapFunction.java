@@ -6,6 +6,8 @@ import android.text.TextUtils;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import io.stanwood.framework.analytics.generic.TrackerParams;
+
 public class DefaultMapFunction implements MapFunction {
     @Nullable
     @Override

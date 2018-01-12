@@ -2,27 +2,30 @@ package io.stanwood.analyticstest.analytics;
 
 import android.app.Application;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import io.stanwood.framework.analytics.BaseAnalyticsTracker;
-import io.stanwood.framework.analytics.Tracker;
-import io.stanwood.framework.analytics.TrackerKeys;
-import io.stanwood.framework.analytics.TrackerParams;
-import io.stanwood.framework.analytics.TrackingEvent;
 import io.stanwood.framework.analytics.adjust.AdjustTracker;
 import io.stanwood.framework.analytics.bugfender.BugfenderTracker;
 import io.stanwood.framework.analytics.fabric.FabricTracker;
 import io.stanwood.framework.analytics.firebase.FirebaseTracker;
 import io.stanwood.framework.analytics.firebase.MapFunction;
 import io.stanwood.framework.analytics.ga.GoogleAnalyticsTracker;
+import io.stanwood.framework.analytics.generic.Tracker;
+import io.stanwood.framework.analytics.generic.TrackerKeys;
+import io.stanwood.framework.analytics.generic.TrackerParams;
+import io.stanwood.framework.analytics.generic.TrackingEvent;
 import io.stanwood.framework.analytics.mixpanel.MixpanelTracker;
 
 public class AppTracker extends BaseAnalyticsTracker {
     private static AppTracker instance;
 
-    private AppTracker(FabricTracker fabricTracker, FirebaseTracker firebaseTracker, BugfenderTracker bugfenderTracker, Tracker... optional) {
+    private AppTracker(@NonNull FabricTracker fabricTracker, @NonNull FirebaseTracker firebaseTracker,
+                       @NonNull BugfenderTracker bugfenderTracker, @Nullable Tracker... optional) {
         super(fabricTracker, firebaseTracker, bugfenderTracker, optional);
     }
 
