@@ -83,7 +83,7 @@ public abstract class Tracker {
             this.context = context;
         }
 
-        public T setDebug(boolean enable) {
+        public T isSandbox(boolean enable) {
             this.isDebug = enable;
             return (T) this;
         }

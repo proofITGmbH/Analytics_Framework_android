@@ -13,7 +13,6 @@ import java.util.Map;
 import io.stanwood.framework.analytics.BaseAnalyticsTracker;
 import io.stanwood.framework.analytics.TrackerTree;
 import io.stanwood.framework.analytics.adjust.AdjustTracker;
-import io.stanwood.framework.analytics.bugfender.BugfenderTracker;
 import io.stanwood.framework.analytics.fabric.FabricTracker;
 import io.stanwood.framework.analytics.firebase.FirebaseTracker;
 import io.stanwood.framework.analytics.firebase.MapFunction;
@@ -23,14 +22,15 @@ import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingEvent;
 import io.stanwood.framework.analytics.mixpanel.MixpanelTracker;
+import io.stanwood.framework.analytics.testfairy.TestfairyTracker;
 import timber.log.Timber;
 
-public class AppTracker extends BaseAnalyticsTracker {
-    private static AppTracker instance;
+public class AdavancedAppTracker extends BaseAnalyticsTracker {
+    private static AdavancedAppTracker instance;
 
-    private AppTracker(@NonNull FabricTracker fabricTracker, @NonNull FirebaseTracker firebaseTracker,
-                       @NonNull BugfenderTracker bugfenderTracker, @Nullable Tracker... optional) {
-        super(fabricTracker, firebaseTracker, bugfenderTracker, optional);
+    private AdavancedAppTracker(@NonNull FabricTracker fabricTracker, @NonNull FirebaseTracker firebaseTracker,
+                                @NonNull TestfairyTracker testfairyTracker, @Nullable Tracker... optional) {
+        super(fabricTracker, firebaseTracker, testfairyTracker, optional);
         if (!BuildConfig.DEBUG) {
             Timber.plant(new TrackerTree(this));
         }
@@ -40,7 +40,7 @@ public class AppTracker extends BaseAnalyticsTracker {
         if (instance == null) {
             FirebaseTracker firebaseTracker = FirebaseTracker.builder(application)
                     .setExceptionTrackingEnabled(true)
-                    .setDebug(BuildConfig.DEBUG)
+                    .isSandbox(BuildConfig.DEBUG)
                     .mapFunction(new MapFunction() {
                         @Override
                         public Bundle map(TrackerParams params) {
@@ -52,7 +52,7 @@ public class AppTracker extends BaseAnalyticsTracker {
                         }
                     }).build();
             Tracker adjustTracker = AdjustTracker.builder(application, "KEY")
-                    .setDebug(BuildConfig.DEBUG)
+                    .isSandbox(BuildConfig.DEBUG)
                     .mapFunction(new io.stanwood.framework.analytics.adjust.MapFunction() {
                         @Override
                         public String mapContentToken(TrackerParams params) {
@@ -64,7 +64,7 @@ public class AppTracker extends BaseAnalyticsTracker {
                     })
                     .build();
             Tracker mixpanelTracker = MixpanelTracker.builder(application, "KEY")
-                    .setDebug(BuildConfig.DEBUG)
+                    .isSandbox(BuildConfig.DEBUG)
                     .mapFunction(new io.stanwood.framework.analytics.mixpanel.MapFunction() {
                         @Override
                         public Map<String, String> map(TrackerParams params) {
@@ -78,16 +78,16 @@ public class AppTracker extends BaseAnalyticsTracker {
                     .build();
             Tracker gaTracker = GoogleAnalyticsTracker.builder(application, "KEY")
                     .setExceptionTrackingEnabled(true)
-                    .setDebug(BuildConfig.DEBUG)
+                    .isSandbox(BuildConfig.DEBUG)
                     .build();
-            FabricTracker fabricTracker = FabricTracker.builder(application).setDebug(BuildConfig.DEBUG).build();
-            BugfenderTracker bugfenderTracker = BugfenderTracker.builder(application, "KEY").setDebug(!BuildConfig.DEBUG).build();
-            instance = new AppTracker(fabricTracker, firebaseTracker, bugfenderTracker, mixpanelTracker, adjustTracker, gaTracker);
+            FabricTracker fabricTracker = FabricTracker.builder(application).isSandbox(BuildConfig.DEBUG).build();
+            TestfairyTracker testfairyTracker = TestfairyTracker.builder(application, "KEY").isSandbox(!BuildConfig.DEBUG).build();
+            instance = new AdavancedAppTracker(fabricTracker, firebaseTracker, testfairyTracker, mixpanelTracker, adjustTracker, gaTracker);
             FirebasePerformance.getInstance().setPerformanceCollectionEnabled(!BuildConfig.DEBUG);
         }
     }
 
-    public static AppTracker instance() {
+    public static AdavancedAppTracker instance() {
         if (instance == null) {
             throw new IllegalArgumentException("Call init() first!");
         }
