@@ -15,12 +15,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void samples() {
-        AdavancedAppTracker.init(getApplication());
-        AdavancedAppTracker.instance().trackUser("666-666", "go@to.hell");
-        AdavancedAppTracker.instance().trackScreenView("home");
-        AdavancedAppTracker.instance().trackAdLoaded("123456");
-        AdavancedAppTracker.instance().trackShowDetails("id", "details of id");
-        AdavancedAppTracker.instance().trackException(new IllegalStateException("error"));
+        AdvancedAppTracker.init(getApplication());
+        AdvancedAppTracker.instance().trackUser("666-666", "go@to.hell");
+        AdvancedAppTracker.instance().trackScreenView("home");
+        AdvancedAppTracker.instance().trackAdLoaded("123456");
+        AdvancedAppTracker.instance().trackShowDetails("id", "details of id");
+        AdvancedAppTracker.instance().trackException(new IllegalStateException("error"));
         Timber.d("message");
         Timber.e(new IllegalStateException("error"));
     }
