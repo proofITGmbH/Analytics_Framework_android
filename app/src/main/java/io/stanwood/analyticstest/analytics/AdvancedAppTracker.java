@@ -25,11 +25,11 @@ import io.stanwood.framework.analytics.mixpanel.MixpanelTracker;
 import io.stanwood.framework.analytics.testfairy.TestfairyTracker;
 import timber.log.Timber;
 
-public class AdavancedAppTracker extends BaseAnalyticsTracker {
-    private static AdavancedAppTracker instance;
+public class AdvancedAppTracker extends BaseAnalyticsTracker {
+    private static AdvancedAppTracker instance;
 
-    private AdavancedAppTracker(@NonNull FabricTracker fabricTracker, @NonNull FirebaseTracker firebaseTracker,
-                                @NonNull TestfairyTracker testfairyTracker, @Nullable Tracker... optional) {
+    private AdvancedAppTracker(@NonNull FabricTracker fabricTracker, @NonNull FirebaseTracker firebaseTracker,
+                               @NonNull TestfairyTracker testfairyTracker, @Nullable Tracker... optional) {
         super(fabricTracker, firebaseTracker, testfairyTracker, optional);
         if (!BuildConfig.DEBUG) {
             Timber.plant(new TrackerTree(this));
@@ -82,12 +82,12 @@ public class AdavancedAppTracker extends BaseAnalyticsTracker {
                     .build();
             FabricTracker fabricTracker = FabricTracker.builder(application).isSandbox(BuildConfig.DEBUG).build();
             TestfairyTracker testfairyTracker = TestfairyTracker.builder(application, "KEY").isSandbox(!BuildConfig.DEBUG).build();
-            instance = new AdavancedAppTracker(fabricTracker, firebaseTracker, testfairyTracker, mixpanelTracker, adjustTracker, gaTracker);
+            instance = new AdvancedAppTracker(fabricTracker, firebaseTracker, testfairyTracker, mixpanelTracker, adjustTracker, gaTracker);
             FirebasePerformance.getInstance().setPerformanceCollectionEnabled(!BuildConfig.DEBUG);
         }
     }
 
-    public static AdavancedAppTracker instance() {
+    public static AdvancedAppTracker instance() {
         if (instance == null) {
             throw new IllegalArgumentException("Call init() first!");
         }
