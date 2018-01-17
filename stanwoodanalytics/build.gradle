@@ -12,7 +12,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
@@ -27,5 +27,5 @@ dependencies {
     api project(':generictracker')
     api project(':firebasetrackingprovider')
     api project(':fabrictrackingprovider')
-    api project(':bugfendertrackingprovider')
+    api project(':testfairytrackingprovider')
 }
