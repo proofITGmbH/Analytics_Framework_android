@@ -50,6 +50,11 @@ public class TrackerContainer {
         }
 
         public Builder addTracker(@NonNull Tracker... trackers) {
+            for (Tracker tracker : trackers) {
+                if (!tracker.isDebug) {
+                    tracker.init();
+                }
+            }
             Collections.addAll(this.trackers, trackers);
             return this;
         }
