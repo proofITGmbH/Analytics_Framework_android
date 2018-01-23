@@ -27,7 +27,7 @@ public class TestfairyTracker extends Tracker {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         TestFairy.begin(context, appKey);
     }
 

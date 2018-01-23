@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 
 public abstract class Tracker {
 
-    boolean isDebug;
+    public boolean isDebug;
     protected Application context;
     protected boolean exceptionTrackingEnabled;
     protected int logLevel;
@@ -19,7 +19,7 @@ public abstract class Tracker {
         this.logLevel = builder.logLevel;
     }
 
-    abstract void init();
+    public abstract void init();
 
 
     void trackEvent(@NonNull TrackerParams params) {
