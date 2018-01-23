@@ -32,7 +32,7 @@ public class AdjustTracker extends Tracker {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         String environment = isDebug ? AdjustConfig.ENVIRONMENT_SANDBOX : AdjustConfig.ENVIRONMENT_PRODUCTION;
         AdjustConfig config = new AdjustConfig(context, appKey, environment);
         Adjust.onCreate(config);

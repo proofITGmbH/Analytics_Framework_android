@@ -31,7 +31,7 @@ public class BugfenderTracker extends Tracker {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         Bugfender.init(context, appKey, isDebug);
         if (enableLogcatLogging) {
             Bugfender.enableLogcatLogging();

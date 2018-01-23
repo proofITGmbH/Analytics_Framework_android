@@ -45,7 +45,7 @@ public class GoogleAnalyticsTracker extends Tracker {
 
     @SuppressLint("MissingPermission")
     @Override
-    protected void init() {
+    public void init() {
         tracker = GoogleAnalytics.getInstance(context).newTracker(appKey);
         tracker.enableExceptionReporting(exceptionTrackingEnabled);
         tracker.setSampleRate(sampleRate);
