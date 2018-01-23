@@ -24,5 +24,6 @@ android {
 dependencies {
     implementation project(':generictracker')
     implementation "com.android.support:support-annotations:$rootProject.ext.SupportLibVersion"
-    implementation 'testfairy:testfairy-android-sdk:1.5.9@aar'
+    implementation 'testfairy:testfairy-android-sdk:1.5.15@aar'
+    provided 'com.squareup.okhttp3:okhttp:3.9.1'
 }
