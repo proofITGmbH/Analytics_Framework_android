@@ -14,6 +14,7 @@ import io.fabric.sdk.android.Fabric;
 import io.stanwood.framework.analytics.generic.Tracker;
 import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
+import io.stanwood.framework.analytics.generic.TrackingKey;
 
 public class FabricTracker extends Tracker {
     protected FabricTracker(Builder builder) {
@@ -50,9 +51,9 @@ public class FabricTracker extends Tracker {
             if (entry.getValue() == null) {
                 continue;
             }
-            if (entry.getKey().equals("id")) {
+            if (entry.getKey().equals(TrackingKey.USER_ID)) {
                 Crashlytics.setUserIdentifier((String) entry.getValue());
-            } else if (entry.getKey().equals("email")) {
+            } else if (entry.getKey().equals(TrackingKey.USER_EMAIL)) {
                 Crashlytics.setUserEmail((String) entry.getValue());
             } else if (entry.getValue() instanceof String) {
                 Crashlytics.setString(entry.getKey(), (String) entry.getValue());

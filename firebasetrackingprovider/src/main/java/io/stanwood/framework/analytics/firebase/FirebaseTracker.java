@@ -55,7 +55,12 @@ public class FirebaseTracker extends Tracker {
 
     @Override
     public void track(@NonNull TrackerKeys keys) {
-        //noop
+        if (keys.getCustomKeys().containsKey("id")) {
+            firebaseAnalytics.setUserId(keys.getCustomKeys().get("id").toString());
+        }
+        if (keys.getCustomKeys().containsKey("email")) {
+            firebaseAnalytics.setUserProperty("email", keys.getCustomKeys().get("email").toString());
+        }
     }
 
 

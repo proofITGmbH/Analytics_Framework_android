@@ -13,6 +13,7 @@ import java.util.Map;
 import io.stanwood.framework.analytics.generic.Tracker;
 import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
+import io.stanwood.framework.analytics.generic.TrackingKey;
 
 public class MixpanelTracker extends Tracker {
     private final String appKey;
@@ -57,9 +58,9 @@ public class MixpanelTracker extends Tracker {
         MixpanelAPI.People p = mixpanelAPI.getPeople();
         for (Map.Entry<String, Object> entry : keys.getCustomKeys().entrySet()) {
             String key = entry.getKey();
-            if (key.equalsIgnoreCase("email")) {
+            if (key.equalsIgnoreCase(TrackingKey.USER_EMAIL)) {
                 p.set("$email", entry.getValue());
-            } else if (key.equalsIgnoreCase("id")) {
+            } else if (key.equalsIgnoreCase(TrackingKey.USER_ID)) {
                 p.identify((String) entry.getValue());
             } else {
                 p.set(key, entry.getValue());
