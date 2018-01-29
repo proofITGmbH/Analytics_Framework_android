@@ -11,6 +11,7 @@ import io.stanwood.framework.analytics.generic.TrackerContainer;
 import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingEvent;
+import io.stanwood.framework.analytics.generic.TrackingKey;
 import io.stanwood.framework.analytics.testfairy.TestfairyTracker;
 
 public class BaseAnalyticsTracker {
@@ -34,7 +35,7 @@ public class BaseAnalyticsTracker {
     }
 
     public void trackUser(String id, String email) {
-        trackerContainer.trackKeys(TrackerKeys.builder().addCustomProperty("id", id).addCustomProperty("email", email).build());
+        trackerContainer.trackKeys(TrackerKeys.builder().addCustomProperty(TrackingKey.USER_ID, id).addCustomProperty(TrackingKey.USER_EMAIL, email).build());
     }
 
     public void trackParameter(TrackerParams params) {
