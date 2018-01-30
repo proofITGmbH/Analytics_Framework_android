@@ -11,6 +11,7 @@ import io.stanwood.framework.analytics.fabric.FabricTracker;
 import io.stanwood.framework.analytics.firebase.FirebaseTracker;
 import io.stanwood.framework.analytics.generic.Tracker;
 import io.stanwood.framework.analytics.testfairy.TestfairyTracker;
+import io.stanwood.framework.analytics.testfairy.TestfairyTrackerImpl;
 
 public class SimpleAppTracker extends BaseAnalyticsTracker {
     private static SimpleAppTracker instance;
