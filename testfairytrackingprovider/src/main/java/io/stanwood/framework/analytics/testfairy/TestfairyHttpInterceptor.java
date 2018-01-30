@@ -16,6 +16,8 @@ import okhttp3.ResponseBody;
  * OkHttp interceptor to log HTTP calls to Testfairy.
  *
  * For integration guidelines and details check out the <a href="https://docs.testfairy.com/Android/Log_Network.html">Testfairy documentation</a>.
+ *
+ * WHEN ADAPTING THIS CLASS ALWAYS ALSO CHECK THE NO-OP VARIANT!
  */
 public class TestfairyHttpInterceptor implements Interceptor {
 

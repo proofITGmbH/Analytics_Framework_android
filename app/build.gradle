@@ -37,7 +37,8 @@ dependencies {
     implementation project(':gatrackingprovider')
     implementation project(':mixpaneltrackingprovider')
     implementation project(':adjusttrackingprovider')
+    implementationDebug project('testfairytrackingprovider')
+    implementationRelease project('testfairytrackingprovider-noop')
     implementation "com.android.support:appcompat-v7:$rootProject.ext.SupportLibVersion"
     implementation "com.google.firebase:firebase-perf:$rootProject.ext.FirebaseVersion"
-
 }

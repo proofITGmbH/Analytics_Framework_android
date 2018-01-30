@@ -11,10 +11,13 @@ import io.stanwood.framework.analytics.generic.Tracker;
 import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 
-public class TestfairyTracker extends Tracker {
+/**
+ * WHEN ADAPTING THIS CLASS ALWAYS ALSO CHECK THE NO-OP VARIANT!
+ */
+public class TestfairyTrackerImpl extends TestfairyTracker {
     private final String appKey;
 
-    protected TestfairyTracker(Builder builder) {
+    protected TestfairyTrackerImpl(Builder builder) {
         super(builder);
         this.appKey = builder.appKey;
     }
@@ -48,7 +51,7 @@ public class TestfairyTracker extends Tracker {
         }
     }
 
-    public static class Builder extends Tracker.Builder<Builder> {
+    public static class Builder extends TestfairyTracker.Builder<Builder> {
         private String appKey;
 
         Builder(Application context, String appKey) {
@@ -57,7 +60,7 @@ public class TestfairyTracker extends Tracker {
         }
 
         public TestfairyTracker build() {
-            return new TestfairyTracker(this);
+            return new TestfairyTrackerImpl(this);
         }
 
     }
