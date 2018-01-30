@@ -10,6 +10,7 @@ import com.testfairy.TestFairy;
 import io.stanwood.framework.analytics.generic.Tracker;
 import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
+import io.stanwood.framework.analytics.generic.TrackingKey;
 
 /**
  * WHEN ADAPTING THIS CLASS ALWAYS ALSO CHECK THE NO-OP VARIANT!
@@ -46,8 +47,8 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
 
     @Override
     public void track(@NonNull TrackerKeys keys) {
-        if (keys.getCustomKeys().get("id") != null) {
-            TestFairy.setUserId(keys.getCustomKeys().get("id").toString());
+        if (keys.getCustomKeys().get(TrackingKey.USER_ID) != null) {
+            TestFairy.setUserId(keys.getCustomKeys().get(TrackingKey.USER_ID).toString());
         }
     }
 
