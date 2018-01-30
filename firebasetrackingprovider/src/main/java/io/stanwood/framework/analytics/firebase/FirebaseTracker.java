@@ -13,6 +13,7 @@ import com.google.firebase.crash.FirebaseCrash;
 import io.stanwood.framework.analytics.generic.Tracker;
 import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
+import io.stanwood.framework.analytics.generic.TrackingKey;
 
 public class FirebaseTracker extends Tracker {
     private final MapFunction mapFunc;
@@ -55,11 +56,11 @@ public class FirebaseTracker extends Tracker {
 
     @Override
     public void track(@NonNull TrackerKeys keys) {
-        if (keys.getCustomKeys().containsKey("id")) {
-            firebaseAnalytics.setUserId(keys.getCustomKeys().get("id").toString());
+        if (keys.getCustomKeys().containsKey(TrackingKey.USER_ID)) {
+            firebaseAnalytics.setUserId(keys.getCustomKeys().get(TrackingKey.USER_ID).toString());
         }
-        if (keys.getCustomKeys().containsKey("email")) {
-            firebaseAnalytics.setUserProperty("email", keys.getCustomKeys().get("email").toString());
+        if (keys.getCustomKeys().containsKey(TrackingKey.USER_EMAIL)) {
+            firebaseAnalytics.setUserProperty(TrackingKey.USER_EMAIL, keys.getCustomKeys().get(TrackingKey.USER_EMAIL).toString());
         }
     }
 
