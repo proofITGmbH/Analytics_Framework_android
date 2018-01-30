@@ -23,6 +23,7 @@ import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingEvent;
 import io.stanwood.framework.analytics.mixpanel.MixpanelTracker;
 import io.stanwood.framework.analytics.testfairy.TestfairyTracker;
+import io.stanwood.framework.analytics.testfairy.TestfairyTrackerImpl;
 import timber.log.Timber;
 
 public class AdvancedAppTracker extends BaseAnalyticsTracker {
@@ -81,7 +82,7 @@ public class AdvancedAppTracker extends BaseAnalyticsTracker {
                     .isSandbox(BuildConfig.DEBUG)
                     .build();
             FabricTracker fabricTracker = FabricTracker.builder(application).isSandbox(BuildConfig.DEBUG).build();
-            TestfairyTracker testfairyTracker = TestfairyTracker.builder(application, "KEY").isSandbox(!BuildConfig.DEBUG).build();
+            TestfairyTracker testfairyTracker = TestfairyTrackerImpl.builder(application, "KEY").isSandbox(!BuildConfig.DEBUG).build();
             instance = new AdvancedAppTracker(fabricTracker, firebaseTracker, testfairyTracker, mixpanelTracker, adjustTracker, gaTracker);
             FirebasePerformance.getInstance().setPerformanceCollectionEnabled(!BuildConfig.DEBUG);
         }
