@@ -62,6 +62,9 @@ public class FirebaseTracker extends Tracker {
         if (keys.getCustomKeys().containsKey(TrackingKey.USER_EMAIL)) {
             firebaseAnalytics.setUserProperty(TrackingKey.USER_EMAIL, keys.getCustomKeys().get(TrackingKey.USER_EMAIL).toString());
         }
+        if (keys.getCustomKeys().containsKey(TrackingKey.PUSH_TOKEN)) {
+            firebaseAnalytics.setUserProperty(TrackingKey.PUSH_TOKEN, keys.getCustomKeys().get(TrackingKey.PUSH_TOKEN).toString());
+        }
     }
 
 
