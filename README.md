@@ -153,3 +153,35 @@ Tracker adjustTracker = AdjustTracker.builder(application, "KEY")
     })
     .build();
 ```
+
+## Tracker specific documentation
+
+### Testfairy
+
+#### _noop_ module
+The regular Testfairy module pulls in quite a few possibly unwanted permissions. For test builds this usually isn't a problem, but it is likely that you don't want them in your release builds.
+
+Thus there is an alternative module called `testfairytrackingprovider-noop`. It doesn't execute any tracking code and doesn't pull in any dependencies or permissions.
+
+You could configure the dependency in your app's `build.gradle` like so:
+
+```groovy
+debugImplementation 'com.github.stanwood.Analytics_Framework_android:testfairytrackingprovider:$latest_version'
+releaseImplementation 'com.github.stanwood.Analytics_Framework_android:testfairytrackingprovider-noop:$latest_version'
+```
+
+#### okhttp interceptor
+
+The Testfairy module also contains an okhttp `Interceptor` called `TestfairyHttpInterceptor`.
+
+This interceptor is needed to log calls to testfairy and is purely optional.
+
+Add it to your okhttp client as an _app interceptor_:
+
+```java
+OkHttpClient client = new OkHttpClient.Builder()
+    .addInterceptor(new TestfairyHttpInterceptor())
+    .build();
+```
+
+You can also use this without modification in release builds, just make sure to use the _noop_ module for these builds instead of the regular one. The _noop_ version doesn't execute any own code and thus doesn't track network calls to Testfairy.
