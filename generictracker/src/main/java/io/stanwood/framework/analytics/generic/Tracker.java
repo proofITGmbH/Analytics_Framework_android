@@ -21,7 +21,6 @@ public abstract class Tracker {
 
     public abstract void init();
 
-
     void trackEvent(@NonNull TrackerParams params) {
         if (isDebug) {
             if (logLevel > 0) {
@@ -55,10 +54,22 @@ public abstract class Tracker {
         }
     }
 
+    /**
+     * Tracks a full-fledged event.
+     * @param params the {@link TrackerParams}
+     */
     public abstract void track(@NonNull TrackerParams params);
 
+    /**
+     * Tracks an exception.
+     * @param throwable the exception
+     */
     public abstract void track(@NonNull Throwable throwable);
 
+    /**
+     * Tracks custom properties.
+     * @param keys the {@link TrackerKeys}
+     */
     public abstract void track(@NonNull TrackerKeys keys);
 
     public void debug(@Nullable TrackerParams params) {
@@ -80,21 +91,40 @@ public abstract class Tracker {
             this.context = context;
         }
 
+        /**
+         * Disables tracking: no calls to the tracking backend will be made.
+         * @param enable enables sandbox mode and thus disables tracking
+         * @return the builder
+         */
         public T isSandbox(boolean enable) {
             this.isDebug = enable;
             return (T) this;
         }
 
-        public T setExceptionTrackingEnabled(boolean enabled) {
-            this.exceptionTrackingEnabled = enabled;
+        /**
+         * Enables exception tracking: if not set no exceptions will be tracked.
+         * @param enable enables exception tracking
+         * @return the builder
+         */
+        public T setExceptionTrackingEnabled(boolean enable) {
+            this.exceptionTrackingEnabled = enable;
             return (T) this;
         }
 
+        /**
+         * Sets the log level - usually the Android log levels are used here
+         * @param level usually one of the Android log levels as found in {@link android.util.Log}
+         * @return the builder
+         */
         public T setLogLevel(int level) {
             this.logLevel = level;
             return (T) this;
         }
 
+        /**
+         * Constructs the tracker
+         * @return the tracker
+         */
         abstract public Tracker build();
     }
 }

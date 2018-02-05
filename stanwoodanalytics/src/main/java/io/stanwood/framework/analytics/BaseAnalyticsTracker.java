@@ -26,22 +26,55 @@ public class BaseAnalyticsTracker {
         trackerContainer = builder.build();
     }
 
+    /**
+     * Tracks a screen view.
+     * <br><br>
+     * Will become PROTECTED in the future!
+     * @param screenName an unique screen name
+     */
     public void trackScreenView(@NonNull String screenName) {
         trackerContainer.trackEvent(TrackerParams.builder(TrackingEvent.VIEW_ITEM).setName(screenName).build());
     }
 
+    /**
+     * Tracks an exception.
+     * <br><br>
+     * Will become PROTECTED in the future!
+     * @param throwable the exception
+     */
     public void trackException(Throwable throwable) {
         trackerContainer.trackException(throwable);
     }
 
-    public void trackUser(String id, String email) {
+    /**
+     * Tracks a user.
+     * <br><br>
+     * Will become PROTECTED in the future!
+     * @param id the user ID
+     * @param email the user's Email address
+     */
+    public void trackUser(@Nullable String id, @Nullable String email) {
         trackerContainer.trackKeys(TrackerKeys.builder().addCustomProperty(TrackingKey.USER_ID, id).addCustomProperty(TrackingKey.USER_EMAIL, email).build());
     }
 
-    public void trackParameter(TrackerParams params) {
+    /**
+     * Tracks a full-fledged event.
+     * <br><br>
+     * For simple screen views use {@link #trackScreenView(String)}
+     * <br><br>
+     * Will become PROTECTED in the future!
+     * @param params {@link TrackerParams}
+     */
+    public void trackEvent(TrackerParams params) {
         trackerContainer.trackEvent(params);
     }
 
+    /**
+     * Tracks custom properties.
+     * <br><br>
+     * Will become PROTECTED in the future!
+     * @param keys the {@link TrackerKeys}
+     */
     public void trackKeys(TrackerKeys keys) {
         trackerContainer.trackKeys(keys);
     }

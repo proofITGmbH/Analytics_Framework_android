@@ -37,7 +37,7 @@ public class TrackerTree extends Timber.Tree {
             if (t != null) {
                 builder.setId(getMessage(t));
             }
-            tracker.trackParameter(builder.build());
+            tracker.trackEvent(builder.build());
         }
     }
 
