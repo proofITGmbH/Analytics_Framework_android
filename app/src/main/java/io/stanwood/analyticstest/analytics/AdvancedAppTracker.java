@@ -96,7 +96,7 @@ public class AdvancedAppTracker extends BaseAnalyticsTracker {
     }
 
     public void trackAdLoaded(String adId) {
-        trackParameter(TrackerParams.builder("ad").setName("loaded").setId(adId).build());
+        trackEvent(TrackerParams.builder("ad").setName("loaded").setId(adId).build());
     }
 
     public void trackShowDetails(String id, String name) {
