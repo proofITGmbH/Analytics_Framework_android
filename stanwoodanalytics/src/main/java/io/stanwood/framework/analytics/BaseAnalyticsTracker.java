@@ -1,6 +1,7 @@
 package io.stanwood.framework.analytics;
 
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -27,9 +28,20 @@ public class BaseAnalyticsTracker {
     }
 
     /**
+     * Set`s the container log level
+     *
+     * @param context  Context
+     * @param logLevel > 0 to enable tracker container logging
+     */
+    public void setContainerLogLevel(@NonNull Context context, int logLevel) {
+        trackerContainer.setLogLevel(context, logLevel);
+    }
+
+    /**
      * Tracks a screen view.
      * <br><br>
      * Will become PROTECTED in the future!
+     *
      * @param screenName an unique screen name
      */
     public void trackScreenView(@NonNull String screenName) {
@@ -40,6 +52,7 @@ public class BaseAnalyticsTracker {
      * Tracks an exception.
      * <br><br>
      * Will become PROTECTED in the future!
+     *
      * @param throwable the exception
      */
     public void trackException(Throwable throwable) {
@@ -50,7 +63,8 @@ public class BaseAnalyticsTracker {
      * Tracks a user.
      * <br><br>
      * Will become PROTECTED in the future!
-     * @param id the user ID
+     *
+     * @param id    the user ID
      * @param email the user's Email address
      */
     public void trackUser(@Nullable String id, @Nullable String email) {
@@ -63,6 +77,7 @@ public class BaseAnalyticsTracker {
      * For simple screen views use {@link #trackScreenView(String)}
      * <br><br>
      * Will become PROTECTED in the future!
+     *
      * @param params {@link TrackerParams}
      */
     public void trackEvent(TrackerParams params) {
@@ -73,6 +88,7 @@ public class BaseAnalyticsTracker {
      * Tracks custom properties.
      * <br><br>
      * Will become PROTECTED in the future!
+     *
      * @param keys the {@link TrackerKeys}
      */
     public void trackKeys(TrackerKeys keys) {
