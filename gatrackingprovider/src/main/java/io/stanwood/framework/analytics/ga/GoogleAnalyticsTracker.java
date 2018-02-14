@@ -123,7 +123,9 @@ public class GoogleAnalyticsTracker extends Tracker {
     }
 
     public void setClientId(String id) {
-        tracker.setClientId(id);
+        if (tracker!=null) {
+            tracker.setClientId(id);
+        }
     }
 
 
