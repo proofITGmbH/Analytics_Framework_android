@@ -11,7 +11,7 @@ public class TrackerParams {
     private String name;
     private String category;
     private String contentType;
-    private Map<String, String> customProps;
+    private Map<String, Object> customProps;
 
     private TrackerParams(@NonNull Builder builder) {
         eventName = builder.eventName;
@@ -34,7 +34,7 @@ public class TrackerParams {
         return itemId;
     }
 
-    public Map<String, String> getCustomPropertys() {
+    public Map<String, Object> getCustomPropertys() {
         return customProps;
     }
 
@@ -67,7 +67,7 @@ public class TrackerParams {
         private String name = null;
         private String category = null;
         private String contentType = null;
-        private Map<String, String> customProps;
+        private Map<String, Object> customProps;
 
         Builder(@NonNull String eventName) {
             this.eventName = eventName;
@@ -93,7 +93,7 @@ public class TrackerParams {
             return this;
         }
 
-        public Builder addCustomProperty(String key, String value) {
+        public Builder addCustomProperty(String key, Object value) {
             if (customProps == null) {
                 customProps = new HashMap<>();
             }

@@ -23,13 +23,13 @@ public class TrackerContainer {
         this.trackersArray = builder.trackers.toArray(new Tracker[builder.trackers.size()]);
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public void setLogLevel(@NonNull Context context, int logLevel) {
         this.logLevel = logLevel;
         this.context = context.getApplicationContext();
-    }
-
-    public static Builder builder() {
-        return new Builder();
     }
 
     public void trackEvent(@NonNull TrackerParams params) {

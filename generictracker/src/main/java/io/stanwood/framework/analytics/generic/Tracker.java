@@ -56,18 +56,21 @@ public abstract class Tracker {
 
     /**
      * Tracks a full-fledged event.
+     *
      * @param params the {@link TrackerParams}
      */
     public abstract void track(@NonNull TrackerParams params);
 
     /**
      * Tracks an exception.
+     *
      * @param throwable the exception
      */
     public abstract void track(@NonNull Throwable throwable);
 
     /**
      * Tracks custom properties.
+     *
      * @param keys the {@link TrackerKeys}
      */
     public abstract void track(@NonNull TrackerKeys keys);
@@ -93,6 +96,7 @@ public abstract class Tracker {
 
         /**
          * Disables tracking: no calls to the tracking backend will be made.
+         *
          * @param enable enables sandbox mode and thus disables tracking
          * @return the builder
          */
@@ -103,6 +107,7 @@ public abstract class Tracker {
 
         /**
          * Enables exception tracking: if not set no exceptions will be tracked.
+         *
          * @param enable enables exception tracking
          * @return the builder
          */
@@ -113,6 +118,7 @@ public abstract class Tracker {
 
         /**
          * Sets the log level - usually the Android log levels are used here
+         *
          * @param level usually one of the Android log levels as found in {@link android.util.Log}
          * @return the builder
          */
@@ -123,6 +129,7 @@ public abstract class Tracker {
 
         /**
          * Constructs the tracker
+         *
          * @return the tracker
          */
         abstract public Tracker build();

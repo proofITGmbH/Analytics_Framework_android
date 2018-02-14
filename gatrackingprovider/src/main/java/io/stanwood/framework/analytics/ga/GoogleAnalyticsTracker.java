@@ -10,10 +10,16 @@ import android.text.TextUtils;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
+import com.google.android.gms.analytics.ecommerce.Product;
+import com.google.android.gms.analytics.ecommerce.ProductAction;
+
+import java.util.Map;
 
 import io.stanwood.framework.analytics.generic.Tracker;
 import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
+import io.stanwood.framework.analytics.generic.TrackingEvent;
+import io.stanwood.framework.analytics.generic.TrackingKey;
 
 public class GoogleAnalyticsTracker extends Tracker {
     private final String appKey;
@@ -55,25 +61,43 @@ public class GoogleAnalyticsTracker extends Tracker {
 
     @Override
     public void track(@NonNull TrackerParams params) {
-        String screenName = mapFunc.mapScreenName(params);
-        if (!TextUtils.isEmpty(screenName)) {
-            tracker.setScreenName(screenName);
-            tracker.send(new HitBuilders.ScreenViewBuilder().build());
-        } else {
-            String category = mapFunc.mapCategory(params);
-            if (!TextUtils.isEmpty(category)) {
-                HitBuilders.EventBuilder builder = new HitBuilders.EventBuilder().setCategory(category);
-                String action = mapFunc.mapAction(params);
-                if (!TextUtils.isEmpty(action)) {
-                    builder.setAction(action);
-                    String label = mapFunc.mapLabel(params);
-                    if (!TextUtils.isEmpty(label)) {
-                        builder.setLabel(label);
+        TrackerParams mapped = mapFunc.mapParams(params);
+        if (mapped != null) {
+            if (mapped.getEventName().equalsIgnoreCase(TrackingEvent.VIEW_ITEM)) {
+                tracker.setScreenName(params.getName());
+                tracker.send(new HitBuilders.ScreenViewBuilder().build());
+            } else if (mapped.getEventName().equalsIgnoreCase(TrackingEvent.PURCHASE)) {
+                trackPurchase(mapped);
+            } else {
+                HitBuilders.EventBuilder builder = new HitBuilders.EventBuilder().setCategory(params.getEventName());
+                if (!TextUtils.isEmpty(params.getName())) {
+                    builder.setAction(params.getName());
+                    if (!TextUtils.isEmpty(params.getItemId())) {
+                        builder.setLabel(params.getItemId());
                     }
                 }
                 tracker.send(builder.build());
             }
         }
+    }
+
+    private void trackPurchase(TrackerParams params) {
+        Product product = new Product()
+                .setId(params.getItemId())
+                .setName(params.getName())
+                .setCategory(params.getCategory())
+                .setBrand(params.getCustomPropertys().get(TrackingKey.PURCHASE_BRAND).toString())
+                .setPrice((Double) params.getCustomPropertys().get(TrackingKey.PURCHASE_PRICE))
+                .setQuantity((Integer) params.getCustomPropertys().get(TrackingKey.PURCHASE_QUANTITY));
+        ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)
+                .setTransactionId(params.getCustomPropertys().get(TrackingKey.PURCHASE_ORDERID).toString())
+                .setTransactionAffiliation("Google Play Store")
+                .setTransactionRevenue((Double) params.getCustomPropertys().get(TrackingKey.PURCHASE_PRICE));
+        HitBuilders.ScreenViewBuilder builder = new HitBuilders.ScreenViewBuilder()
+                .addProduct(product)
+                .setProductAction(productAction);
+        tracker.setScreenName("transaction");
+        tracker.send(builder.build());
     }
 
     @Override
@@ -87,12 +111,19 @@ public class GoogleAnalyticsTracker extends Tracker {
 
     @Override
     public void track(@NonNull TrackerKeys keys) {
+        Map<Integer, Object> mapped = mapFunc.mapKeys(keys);
+        if (mapped == null) {
+            return;
+        }
         HitBuilders.EventBuilder builder = new HitBuilders.EventBuilder();
-        int i = 0;
-        for (Object entry : keys.getCustomKeys().values()) {
-            builder.setCustomDimension(i++, (String) entry);
+        for (Map.Entry<Integer, Object> entry : mapped.entrySet()) {
+            builder.setCustomDimension(entry.getKey(), (String) entry.getValue());
         }
         tracker.send(builder.build());
+    }
+
+    public void setClientId(String id) {
+        tracker.setClientId(id);
     }
 
 

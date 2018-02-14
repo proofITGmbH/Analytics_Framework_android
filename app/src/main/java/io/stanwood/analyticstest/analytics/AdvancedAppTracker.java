@@ -14,6 +14,7 @@ import io.stanwood.framework.analytics.BaseAnalyticsTracker;
 import io.stanwood.framework.analytics.TrackerTree;
 import io.stanwood.framework.analytics.adjust.AdjustTracker;
 import io.stanwood.framework.analytics.fabric.FabricTracker;
+import io.stanwood.framework.analytics.firebase.DefaultMapFunction;
 import io.stanwood.framework.analytics.firebase.FirebaseTracker;
 import io.stanwood.framework.analytics.firebase.MapFunction;
 import io.stanwood.framework.analytics.ga.GoogleAnalyticsTracker;
@@ -42,7 +43,7 @@ public class AdvancedAppTracker extends BaseAnalyticsTracker {
             FirebaseTracker firebaseTracker = FirebaseTracker.builder(application)
                     .setExceptionTrackingEnabled(true)
                     .isSandbox(BuildConfig.DEBUG)
-                    .mapFunction(new MapFunction() {
+                    .mapFunction(new DefaultMapFunction() {
                         @Override
                         public Bundle map(TrackerParams params) {
                             Bundle bundle = new Bundle();
@@ -54,7 +55,7 @@ public class AdvancedAppTracker extends BaseAnalyticsTracker {
                     }).build();
             Tracker adjustTracker = AdjustTracker.builder(application, "KEY")
                     .isSandbox(BuildConfig.DEBUG)
-                    .mapFunction(new io.stanwood.framework.analytics.adjust.MapFunction() {
+                    .mapFunction(new io.stanwood.framework.analytics.adjust.DefaultMapFunction() {
                         @Override
                         public String mapContentToken(TrackerParams params) {
                             if (params.getEventName().equals(TrackingEvent.VIEW_ITEM) && params.getName().equals("home")) {
@@ -66,7 +67,7 @@ public class AdvancedAppTracker extends BaseAnalyticsTracker {
                     .build();
             Tracker mixpanelTracker = MixpanelTracker.builder(application, "KEY")
                     .isSandbox(BuildConfig.DEBUG)
-                    .mapFunction(new io.stanwood.framework.analytics.mixpanel.MapFunction() {
+                    .mapFunction(new io.stanwood.framework.analytics.mixpanel.DefaultMapFunction() {
                         @Override
                         public Map<String, String> map(TrackerParams params) {
                             Map<String, String> mapped = new HashMap<>(3);
@@ -100,7 +101,7 @@ public class AdvancedAppTracker extends BaseAnalyticsTracker {
     }
 
     public void trackShowDetails(String id, String name) {
-        trackKeys(TrackerKeys.builder().addCustomProperty("id", id).addCustomProperty("name", name).build());
+        trackKeys(TrackerKeys.builder("show_details").addCustomProperty("id", id).addCustomProperty("name", name).build());
         trackScreenView("details");
     }
 }

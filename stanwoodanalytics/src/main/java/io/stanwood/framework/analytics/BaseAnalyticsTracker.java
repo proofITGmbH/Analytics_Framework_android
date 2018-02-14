@@ -64,11 +64,28 @@ public class BaseAnalyticsTracker {
      * <br><br>
      * Will become PROTECTED in the future!
      *
-     * @param id    the user ID
-     * @param email the user's Email address
+     * @param id        the user ID
+     * @param email     the user's Email address
+     * @param pushToken the device push token
      */
-    public void trackUser(@Nullable String id, @Nullable String email) {
-        trackerContainer.trackKeys(TrackerKeys.builder().addCustomProperty(TrackingKey.USER_ID, id).addCustomProperty(TrackingKey.USER_EMAIL, email).build());
+    public void trackUser(@Nullable String id, @Nullable String email, @Nullable String pushToken) {
+        trackerContainer.trackKeys(TrackerKeys.builder(TrackingEvent.IDENTIFY_USER)
+                .addCustomProperty(TrackingKey.USER_ID, id)
+                .addCustomProperty(TrackingKey.USER_EMAIL, email)
+                .addCustomProperty(TrackingKey.PUSH_TOKEN, pushToken)
+                .build());
+    }
+
+    public void trackPurchase(@NonNull String id, @NonNull String orderId, @NonNull String name, int quantity, double price, @Nullable String category, @Nullable String brand) {
+        trackerContainer.trackEvent(TrackerParams.builder(TrackingEvent.PURCHASE)
+                .setName(name)
+                .setId(id)
+                .setCategory(category)
+                .addCustomProperty(TrackingKey.PURCHASE_ORDERID, orderId)
+                .addCustomProperty(TrackingKey.PURCHASE_QUANTITY, quantity)
+                .addCustomProperty(TrackingKey.PURCHASE_PRICE, price)
+                .addCustomProperty(TrackingKey.PURCHASE_BRAND, brand)
+                .build());
     }
 
     /**

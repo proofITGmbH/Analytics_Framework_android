@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
     void samples() {
         AdvancedAppTracker.init(getApplication());
-        AdvancedAppTracker.instance().trackUser("alice", "alice@bob.com");
+        AdvancedAppTracker.instance().trackUser("alice", "alice@bob.com",null);
         AdvancedAppTracker.instance().trackScreenView("home");
         AdvancedAppTracker.instance().trackAdLoaded("123456");
         AdvancedAppTracker.instance().trackShowDetails("id", "details of id");
