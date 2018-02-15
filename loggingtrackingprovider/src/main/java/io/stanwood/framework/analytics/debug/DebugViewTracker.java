@@ -1,24 +1,17 @@
 package io.stanwood.framework.analytics.debug;
 
 
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresPermission;
 import android.text.TextUtils;
-
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Map;
-
 import io.stanwood.framework.analytics.generic.Tracker;
 import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
-import io.stanwood.framework.analytics.generic.TrackingKey;
 
 public class DebugViewTracker extends Tracker {
 
@@ -31,10 +24,9 @@ public class DebugViewTracker extends Tracker {
     }
 
     @Override
-    public void init() {
-
+    public void ensureInitialized() {
+        //noop
     }
-
 
     @Override
     public void track(@NonNull TrackerParams params) {

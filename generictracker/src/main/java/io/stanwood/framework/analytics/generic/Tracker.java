@@ -6,27 +6,34 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 public abstract class Tracker {
-
-    public boolean isDebug;
     protected Application context;
     protected boolean exceptionTrackingEnabled;
     protected int logLevel;
+    private boolean enabled;
 
     protected Tracker(Builder builder) {
         this.context = builder.context;
         this.exceptionTrackingEnabled = builder.exceptionTrackingEnabled;
-        this.isDebug = builder.isDebug;
+        this.enabled = builder.isEnabled;
         this.logLevel = builder.logLevel;
     }
 
-    public abstract void init();
+    public abstract void ensureInitialized();
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
     void trackEvent(@NonNull TrackerParams params) {
-        if (isDebug) {
-            if (logLevel > 0) {
-                debug(params);
-            }
-        } else {
+        if (logLevel > 0) {
+            debug(params);
+        }
+        if (enabled) {
+            ensureInitialized();
             track(params);
         }
     }
@@ -35,21 +42,21 @@ public abstract class Tracker {
         if (!exceptionTrackingEnabled) {
             return;
         }
-        if (isDebug) {
-            if (logLevel > 0) {
-                debug(throwable);
-            }
-        } else {
+        if (logLevel > 0) {
+            debug(throwable);
+        }
+        if (enabled) {
+            ensureInitialized();
             track(throwable);
         }
     }
 
     void trackCustomKeys(@NonNull TrackerKeys keys) {
-        if (isDebug) {
-            if (logLevel > 0) {
-                debug(keys);
-            }
-        } else {
+        if (logLevel > 0) {
+            debug(keys);
+        }
+        if (enabled) {
+            ensureInitialized();
             track(keys);
         }
     }
@@ -85,7 +92,7 @@ public abstract class Tracker {
     }
 
     public abstract static class Builder<T extends Builder<T>> {
-        private boolean isDebug = false;
+        private boolean isEnabled = false;
         private int logLevel = 0;
         private boolean exceptionTrackingEnabled = false;
         private Application context;
@@ -100,8 +107,8 @@ public abstract class Tracker {
          * @param enable enables sandbox mode and thus disables tracking
          * @return the builder
          */
-        public T isSandbox(boolean enable) {
-            this.isDebug = enable;
+        public T setEnabled(boolean enable) {
+            this.isEnabled = enable;
             return (T) this;
         }
 

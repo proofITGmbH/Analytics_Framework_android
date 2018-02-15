@@ -51,12 +51,14 @@ public class GoogleAnalyticsTracker extends Tracker {
 
     @SuppressLint("MissingPermission")
     @Override
-    public void init() {
-        tracker = GoogleAnalytics.getInstance(context).newTracker(appKey);
-        tracker.enableExceptionReporting(exceptionTrackingEnabled);
-        tracker.setSampleRate(sampleRate);
-        tracker.enableAutoActivityTracking(activityTracking);
-        tracker.enableAdvertisingIdCollection(adIdCollection);
+    public void ensureInitialized() {
+        if (tracker == null) {
+            tracker = GoogleAnalytics.getInstance(context).newTracker(appKey);
+            tracker.enableExceptionReporting(exceptionTrackingEnabled);
+            tracker.setSampleRate(sampleRate);
+            tracker.enableAutoActivityTracking(activityTracking);
+            tracker.enableAdvertisingIdCollection(adIdCollection);
+        }
     }
 
     @Override
@@ -79,6 +81,13 @@ public class GoogleAnalyticsTracker extends Tracker {
                 tracker.send(builder.build());
             }
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        GoogleAnalytics.getInstance(context).setAppOptOut(!enabled);
     }
 
     private void trackPurchase(TrackerParams params) {
@@ -123,7 +132,7 @@ public class GoogleAnalyticsTracker extends Tracker {
     }
 
     public void setClientId(String id) {
-        if (tracker!=null) {
+        if (tracker != null) {
             tracker.setClientId(id);
         }
     }

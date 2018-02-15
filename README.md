@@ -62,9 +62,9 @@ public class SimpleAppTracker extends BaseAnalyticsTracker {
     public static synchronized void init(Application application) {
         if (instance == null) {
             instance = new SimpleAppTracker(
-                FabricTracker.builder(application).isSandbox(BuildConfig.DEBUG).build(),
-                FirebaseTracker.builder(application).setExceptionTrackingEnabled(true).isSandbox(BuildConfig.DEBUG).build(),
-                TestfairyTrackerImpl.builder(application, "KEY").isSandbox(!BuildConfig.DEBUG).build()
+                FabricTracker.builder(application).setEnabled(!BuildConfig.DEBUG).build(),
+                FirebaseTracker.builder(application).setExceptionTrackingEnabled(true).setEnabled(!BuildConfig.DEBUG).build(),
+                TestfairyTrackerImpl.builder(application, "KEY").setEnabled(BuildConfig.DEBUG).build()
             );
 
             // we opted to not calling this within the Firebase tracker module for you because enabling/disabling FirebasePerformance often differs from the sandbox setting for this module
@@ -124,7 +124,7 @@ For example if you have custom labels for Firebase Analytics property keys you c
 ```java
 FirebaseTracker firebaseTracker = FirebaseTracker.builder(application)
     .setExceptionTrackingEnabled(true)
-    .isSandbox(BuildConfig.DEBUG)
+    .setEnabled(!BuildConfig.DEBUG)
     .mapFunction(new io.stanwood.framework.analytics.firebase.MapFunction() {
         @Override
         public Bundle map(TrackerParams params) {
@@ -141,7 +141,7 @@ Or if you just want to track a specific token to Adjust:
 
 ```java
 Tracker adjustTracker = AdjustTracker.builder(application, "KEY")
-    .isSandbox(BuildConfig.DEBUG)
+    .setEnabled(!BuildConfig.DEBUG)
     .mapFunction(new io.stanwood.framework.analytics.adjust.MapFunction() {
         @Override
         public String mapContentToken(TrackerParams params) {

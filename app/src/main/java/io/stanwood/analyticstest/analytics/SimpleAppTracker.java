@@ -23,9 +23,9 @@ public class SimpleAppTracker extends BaseAnalyticsTracker {
 
     public static synchronized void init(Application application) {
         if (instance == null) {
-            instance = new SimpleAppTracker(FabricTracker.builder(application).isSandbox(BuildConfig.DEBUG).build(),
-                    FirebaseTracker.builder(application).setExceptionTrackingEnabled(true).isSandbox(BuildConfig.DEBUG).build(),
-                    TestfairyTrackerImpl.builder(application, "KEY").isSandbox(!BuildConfig.DEBUG).build());
+            instance = new SimpleAppTracker(FabricTracker.builder(application).setEnabled(!BuildConfig.DEBUG).build(),
+                    FirebaseTracker.builder(application).setExceptionTrackingEnabled(true).setEnabled(!BuildConfig.DEBUG).build(),
+                    TestfairyTrackerImpl.builder(application, "KEY").setEnabled(BuildConfig.DEBUG).build());
             FirebasePerformance.getInstance().setPerformanceCollectionEnabled(!BuildConfig.DEBUG);
         }
     }

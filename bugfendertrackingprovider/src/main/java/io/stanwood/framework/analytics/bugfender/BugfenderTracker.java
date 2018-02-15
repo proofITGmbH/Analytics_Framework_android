@@ -15,6 +15,7 @@ public class BugfenderTracker extends Tracker {
     private final String appKey;
     private final boolean enableUiLogging;
     private final boolean enableLogcatLogging;
+    private boolean isInited;
 
     protected BugfenderTracker(Builder builder) {
         super(builder);
@@ -31,13 +32,16 @@ public class BugfenderTracker extends Tracker {
     }
 
     @Override
-    public void init() {
-        Bugfender.init(context, appKey, isDebug);
-        if (enableLogcatLogging) {
-            Bugfender.enableLogcatLogging();
-        }
-        if (enableUiLogging) {
-            Bugfender.enableUIEventLogging(context);
+    public void ensureInitialized() {
+        if (!isInited) {
+            isInited = true;
+            Bugfender.init(context, appKey, logLevel > 0);
+            if (enableLogcatLogging) {
+                Bugfender.enableLogcatLogging();
+            }
+            if (enableUiLogging) {
+                Bugfender.enableUIEventLogging(context);
+            }
         }
     }
 
