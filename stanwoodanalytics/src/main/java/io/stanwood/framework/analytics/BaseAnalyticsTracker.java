@@ -1,7 +1,6 @@
 package io.stanwood.framework.analytics;
 
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -25,16 +24,6 @@ public class BaseAnalyticsTracker {
             builder.addTracker(optional);
         }
         trackerContainer = builder.build();
-    }
-
-    /**
-     * Set`s the container log level
-     *
-     * @param context  Context
-     * @param logLevel > 0 to enable tracker container logging
-     */
-    public void setContainerLogLevel(@NonNull Context context, int logLevel) {
-        trackerContainer.setLogLevel(context, logLevel);
     }
 
     /**
