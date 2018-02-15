@@ -38,7 +38,7 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
     }
 
     @Override
-    public void ensureInited() {
+    public void ensureInitialized() {
         if (!isInited) {
             isInited = true;
             TestFairy.begin(context, appKey);

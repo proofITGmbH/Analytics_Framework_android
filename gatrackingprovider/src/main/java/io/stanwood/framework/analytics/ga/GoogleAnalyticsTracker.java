@@ -51,7 +51,7 @@ public class GoogleAnalyticsTracker extends Tracker {
 
     @SuppressLint("MissingPermission")
     @Override
-    public void ensureInited() {
+    public void ensureInitialized() {
         if (tracker == null) {
             tracker = GoogleAnalytics.getInstance(context).newTracker(appKey);
             tracker.enableExceptionReporting(exceptionTrackingEnabled);
@@ -83,22 +83,11 @@ public class GoogleAnalyticsTracker extends Tracker {
         }
     }
 
-    @RequiresPermission(
-            allOf = {"android.permission.INTERNET", "android.permission.ACCESS_NETWORK_STATE"}
-    )
+    @SuppressLint("MissingPermission")
     @Override
-    public void setEnabled() {
-        super.setEnabled();
-        GoogleAnalytics.getInstance(context).setAppOptOut(false);
-    }
-
-    @RequiresPermission(
-            allOf = {"android.permission.INTERNET", "android.permission.ACCESS_NETWORK_STATE"}
-    )
-    @Override
-    public void setDisabled() {
-        super.setDisabled();
-        GoogleAnalytics.getInstance(context).setAppOptOut(true);
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        GoogleAnalytics.getInstance(context).setAppOptOut(!enabled);
     }
 
     private void trackPurchase(TrackerParams params) {

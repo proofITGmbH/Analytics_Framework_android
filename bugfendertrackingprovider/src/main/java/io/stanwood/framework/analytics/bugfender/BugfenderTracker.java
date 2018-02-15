@@ -32,7 +32,7 @@ public class BugfenderTracker extends Tracker {
     }
 
     @Override
-    public void ensureInited() {
+    public void ensureInitialized() {
         if (!isInited) {
             isInited = true;
             Bugfender.init(context, appKey, logLevel > 0);

@@ -39,7 +39,7 @@ public class FirebaseTracker extends Tracker {
 
     @SuppressLint("MissingPermission")
     @Override
-    public void ensureInited() {
+    public void ensureInitialized() {
         if (firebaseAnalytics == null) {
             this.firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         }

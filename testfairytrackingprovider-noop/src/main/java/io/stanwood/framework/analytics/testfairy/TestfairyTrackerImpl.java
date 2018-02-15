@@ -23,7 +23,7 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
     }
 
     @Override
-    public void ensureInited() {
+    public void ensureInitialized() {
         // no-op
     }
 

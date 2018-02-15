@@ -38,7 +38,7 @@ public class FabricTracker extends Tracker {
     }
 
     @Override
-    public void ensureInited() {
+    public void ensureInitialized() {
         if (!isInited) {
             isInited = true;
             Fabric.with(context, new Crashlytics.Builder()

@@ -18,18 +18,14 @@ public abstract class Tracker {
         this.logLevel = builder.logLevel;
     }
 
-    public abstract void ensureInited();
+    public abstract void ensureInitialized();
 
     public boolean isEnabled() {
         return enabled;
     }
 
-    public void setDisabled() {
-        enabled = false;
-    }
-
-    public void setEnabled() {
-        enabled = true;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     void trackEvent(@NonNull TrackerParams params) {
@@ -37,7 +33,7 @@ public abstract class Tracker {
             debug(params);
         }
         if (enabled) {
-            ensureInited();
+            ensureInitialized();
             track(params);
         }
     }
@@ -50,7 +46,7 @@ public abstract class Tracker {
             debug(throwable);
         }
         if (enabled) {
-            ensureInited();
+            ensureInitialized();
             track(throwable);
         }
     }
@@ -60,7 +56,7 @@ public abstract class Tracker {
             debug(keys);
         }
         if (enabled) {
-            ensureInited();
+            ensureInitialized();
             track(keys);
         }
     }

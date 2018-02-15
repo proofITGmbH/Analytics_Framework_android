@@ -24,8 +24,8 @@ public class DebugViewTracker extends Tracker {
     }
 
     @Override
-    public void ensureInited() {
-
+    public void ensureInitialized() {
+        //noop
     }
 
     @Override

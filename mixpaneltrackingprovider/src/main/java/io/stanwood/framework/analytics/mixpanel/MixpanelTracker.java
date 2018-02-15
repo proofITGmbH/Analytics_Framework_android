@@ -38,7 +38,7 @@ public class MixpanelTracker extends Tracker {
     }
 
     @Override
-    public void ensureInited() {
+    public void ensureInitialized() {
         if (mixpanelAPI == null) {
             mixpanelAPI = MixpanelAPI.getInstance(context, appKey);
         }

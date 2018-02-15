@@ -35,7 +35,7 @@ public class AdjustTracker extends Tracker {
     }
 
     @Override
-    public void ensureInited() {
+    public void ensureInitialized() {
         if (!isInited) {
             isInited = true;
             String environment = isEnabled() ? AdjustConfig.ENVIRONMENT_PRODUCTION : AdjustConfig.ENVIRONMENT_SANDBOX;
