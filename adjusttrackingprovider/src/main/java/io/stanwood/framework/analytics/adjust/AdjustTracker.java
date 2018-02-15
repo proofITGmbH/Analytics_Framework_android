@@ -12,6 +12,8 @@ import com.adjust.sdk.AdjustEvent;
 import io.stanwood.framework.analytics.generic.Tracker;
 import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
+import io.stanwood.framework.analytics.generic.TrackingEvent;
+import io.stanwood.framework.analytics.generic.TrackingKey;
 
 public class AdjustTracker extends Tracker {
     private final String appKey;
@@ -41,10 +43,14 @@ public class AdjustTracker extends Tracker {
     @Override
     public void track(@NonNull TrackerParams params) {
         String eventToken = mapFunc.mapContentToken(params);
-        if (!TextUtils.isEmpty(eventToken)) {
-            AdjustEvent event = new AdjustEvent(eventToken);
-            Adjust.trackEvent(event);
+        if (TextUtils.isEmpty(eventToken)) {
+            return;
         }
+        AdjustEvent event = new AdjustEvent(eventToken);
+        if (params.getEventName().equalsIgnoreCase(TrackingEvent.PURCHASE)) {
+            event.setRevenue((double) params.getCustomPropertys().get(TrackingKey.PURCHASE_PRICE), "EUR");
+        }
+        Adjust.trackEvent(event);
     }
 
     @Override
@@ -54,7 +60,13 @@ public class AdjustTracker extends Tracker {
 
     @Override
     public void track(@NonNull TrackerKeys keys) {
-        //noop
+        TrackerKeys mapped = mapFunc.mapKeys(keys);
+        if (mapped == null) {
+            return;
+        }
+        if (mapped.getCustomKeys().containsKey(TrackingKey.PUSH_TOKEN)) {
+            Adjust.setPushToken(mapped.getCustomKeys().get(TrackingKey.PUSH_TOKEN).toString(), context);
+        }
     }
 
     public static class Builder extends Tracker.Builder<Builder> {

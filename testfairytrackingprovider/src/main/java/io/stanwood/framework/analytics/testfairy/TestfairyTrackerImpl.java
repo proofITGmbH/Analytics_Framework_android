@@ -4,10 +4,10 @@ package io.stanwood.framework.analytics.testfairy;
 import android.app.Application;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresPermission;
+import android.text.TextUtils;
 
 import com.testfairy.TestFairy;
 
-import io.stanwood.framework.analytics.generic.Tracker;
 import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingKey;
@@ -17,10 +17,16 @@ import io.stanwood.framework.analytics.generic.TrackingKey;
  */
 public class TestfairyTrackerImpl extends TestfairyTracker {
     private final String appKey;
+    private final MapFunction mapFunc;
 
     protected TestfairyTrackerImpl(Builder builder) {
         super(builder);
         this.appKey = builder.appKey;
+        if (builder.mapFunc == null) {
+            mapFunc = new DefaultMapFunction();
+        } else {
+            mapFunc = builder.mapFunc;
+        }
     }
 
     @RequiresPermission(
@@ -37,7 +43,10 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
 
     @Override
     public void track(@NonNull TrackerParams params) {
-        TestFairy.addEvent(String.format("%s -> [%s] [%s]", params.getEventName(), params.getName(), params.getItemId()));
+        String mapped = mapFunc.map(params);
+        if (!TextUtils.isEmpty(mapped)) {
+            TestFairy.addEvent(mapped);
+        }
     }
 
     @Override
@@ -47,6 +56,10 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
 
     @Override
     public void track(@NonNull TrackerKeys keys) {
+        TrackerKeys mapped = mapFunc.mapKeys(keys);
+        if (mapped == null) {
+            return;
+        }
         if (keys.getCustomKeys().get(TrackingKey.USER_ID) != null) {
             TestFairy.setUserId(keys.getCustomKeys().get(TrackingKey.USER_ID).toString());
         }
@@ -54,6 +67,8 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
 
     public static class Builder extends TestfairyTracker.Builder<Builder> {
         private String appKey;
+
+        private MapFunction mapFunc = null;
 
         Builder(Application context, String appKey) {
             super(context);
@@ -64,5 +79,9 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
             return new TestfairyTrackerImpl(this);
         }
 
+        public Builder mapFunction(MapFunction func) {
+            this.mapFunc = func;
+            return this;
+        }
     }
 }

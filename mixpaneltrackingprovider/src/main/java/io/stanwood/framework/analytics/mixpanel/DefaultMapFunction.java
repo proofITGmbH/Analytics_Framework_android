@@ -6,7 +6,9 @@ import android.text.TextUtils;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
+import io.stanwood.framework.analytics.generic.TrackingEvent;
 
 public class DefaultMapFunction implements MapFunction {
 
@@ -23,5 +25,14 @@ public class DefaultMapFunction implements MapFunction {
             mapped.put("label", params.getItemId());
         }
         return mapped;
+    }
+
+    @Nullable
+    @Override
+    public TrackerKeys mapKeys(TrackerKeys params) {
+        if (params.getTrackKeysEventId().equalsIgnoreCase(TrackingEvent.IDENTIFY_USER)) {
+            return params;
+        }
+        return null;
     }
 }

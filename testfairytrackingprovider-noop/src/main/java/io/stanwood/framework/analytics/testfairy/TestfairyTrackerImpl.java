@@ -3,14 +3,19 @@ package io.stanwood.framework.analytics.testfairy;
 import android.app.Application;
 import android.support.annotation.NonNull;
 
-import io.stanwood.framework.analytics.generic.Tracker;
 import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 
 public class TestfairyTrackerImpl extends TestfairyTracker {
+    private final MapFunction mapFunc;
 
-    protected TestfairyTrackerImpl(Tracker.Builder builder) {
+    protected TestfairyTrackerImpl(Builder builder) {
         super(builder);
+        if (builder.mapFunc == null) {
+            mapFunc = new DefaultMapFunction();
+        } else {
+            mapFunc = builder.mapFunc;
+        }
     }
 
     public static Builder builder(Application context, String appKey) {
@@ -39,6 +44,8 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
 
     public static class Builder extends TestfairyTracker.Builder<Builder> {
 
+        private MapFunction mapFunc = null;
+
         Builder(Application context) {
             super(context);
         }
@@ -47,5 +54,9 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
             return new TestfairyTrackerImpl(this);
         }
 
+        public Builder mapFunction(MapFunction func) {
+            this.mapFunc = func;
+            return this;
+        }
     }
 }

@@ -6,12 +6,21 @@ import android.text.TextUtils;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
+import io.stanwood.framework.analytics.generic.TrackingEvent;
+import io.stanwood.framework.analytics.generic.TrackingKey;
 
 public class DefaultMapFunction implements MapFunction {
     @Nullable
     @Override
     public Bundle map(TrackerParams params) {
+        if (params.getEventName().equalsIgnoreCase(TrackingEvent.PURCHASE)) {
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.VALUE, params.getCustomPropertys().get(TrackingKey.PURCHASE_PRICE).toString());
+            bundle.putString(FirebaseAnalytics.Param.TRANSACTION_ID, params.getCustomPropertys().get(TrackingKey.PURCHASE_ORDERID).toString());
+            return bundle;
+        }
         Bundle bundle = null;
         if (!TextUtils.isEmpty(params.getItemId())) {
             bundle = new Bundle();
@@ -30,5 +39,14 @@ public class DefaultMapFunction implements MapFunction {
             bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, params.getName());
         }
         return bundle;
+    }
+
+    @Nullable
+    @Override
+    public TrackerKeys mapKeys(TrackerKeys params) {
+        if (params.getTrackKeysEventId().equalsIgnoreCase(TrackingEvent.IDENTIFY_USER)) {
+            return params;
+        }
+        return null;
     }
 }

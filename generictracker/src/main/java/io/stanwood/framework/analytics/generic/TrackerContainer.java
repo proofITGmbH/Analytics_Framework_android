@@ -12,17 +12,17 @@ public class TrackerContainer {
     private volatile Tracker[] trackersArray = TRACKER_EMPTY;
 
     private TrackerContainer(Builder builder) {
-        trackersArray = builder.trackers.toArray(new Tracker[builder.trackers.size()]);
+        this.trackersArray = builder.trackers.toArray(new Tracker[builder.trackers.size()]);
     }
 
     public static Builder builder() {
         return new Builder();
     }
 
-    public void trackEvent(@NonNull TrackerParams eventName) {
+    public void trackEvent(@NonNull TrackerParams params) {
         Tracker[] trackers = trackersArray;
         for (int i = 0, count = trackers.length; i < count; i++) {
-            trackers[i].trackEvent(eventName);
+            trackers[i].trackEvent(params);
         }
     }
 
@@ -42,7 +42,6 @@ public class TrackerContainer {
 
     public static class Builder {
         private List<Tracker> trackers = new ArrayList<>();
-
 
         public Builder addTracker(@NonNull Tracker tracker) {
             this.trackers.add(tracker);

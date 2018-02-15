@@ -1,21 +1,17 @@
 package io.stanwood.framework.analytics.ga;
 
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.Map;
+
+import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 
 public interface MapFunction {
     @Nullable
-    String mapCategory(@NonNull TrackerParams params);
+    TrackerParams mapParams(TrackerParams params);
 
     @Nullable
-    String mapAction(@NonNull TrackerParams params);
-
-    @Nullable
-    String mapLabel(@NonNull TrackerParams params);
-
-    @Nullable
-    String mapScreenName(@NonNull TrackerParams params);
+    Map<Integer, Object> mapKeys(TrackerKeys params);
 }

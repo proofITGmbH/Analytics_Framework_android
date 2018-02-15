@@ -10,6 +10,8 @@ import android.support.annotation.RequiresPermission;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 
+import java.util.Map;
+
 import io.stanwood.framework.analytics.generic.Tracker;
 import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
@@ -56,14 +58,16 @@ public class FirebaseTracker extends Tracker {
 
     @Override
     public void track(@NonNull TrackerKeys keys) {
-        if (keys.getCustomKeys().containsKey(TrackingKey.USER_ID)) {
-            firebaseAnalytics.setUserId(keys.getCustomKeys().get(TrackingKey.USER_ID).toString());
+        TrackerKeys mapped = mapFunc.mapKeys(keys);
+        if (mapped == null) {
+            return;
         }
-        if (keys.getCustomKeys().containsKey(TrackingKey.USER_EMAIL)) {
-            firebaseAnalytics.setUserProperty(TrackingKey.USER_EMAIL, keys.getCustomKeys().get(TrackingKey.USER_EMAIL).toString());
-        }
-        if (keys.getCustomKeys().containsKey(TrackingKey.PUSH_TOKEN)) {
-            firebaseAnalytics.setUserProperty(TrackingKey.PUSH_TOKEN, keys.getCustomKeys().get(TrackingKey.PUSH_TOKEN).toString());
+        for (Map.Entry<String, Object> entry : mapped.getCustomKeys().entrySet()) {
+            if (entry.getKey().equalsIgnoreCase(TrackingKey.USER_ID)) {
+                firebaseAnalytics.setUserId(entry.getValue().toString());
+            } else {
+                firebaseAnalytics.setUserProperty(entry.getKey(), entry.getValue().toString());
+            }
         }
     }
 

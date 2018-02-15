@@ -4,6 +4,7 @@ package io.stanwood.framework.analytics.fabric;
 import android.app.Application;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresPermission;
+import android.text.TextUtils;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -17,8 +18,15 @@ import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingKey;
 
 public class FabricTracker extends Tracker {
+    private final MapFunction mapFunc;
+
     protected FabricTracker(Builder builder) {
         super(builder);
+        if (builder.mapFunc == null) {
+            mapFunc = new DefaultMapFunction();
+        } else {
+            mapFunc = builder.mapFunc;
+        }
     }
 
     @RequiresPermission(
@@ -37,7 +45,10 @@ public class FabricTracker extends Tracker {
 
     @Override
     public void track(@NonNull TrackerParams params) {
-        Crashlytics.log(0, params.getEventName(), String.format("[%s] [%s]", params.getName(), params.getItemId()));
+        String mapped = mapFunc.map(params);
+        if (!TextUtils.isEmpty(mapped)) {
+            Crashlytics.log(0, params.getEventName(), mapped);
+        }
     }
 
     @Override
@@ -47,7 +58,11 @@ public class FabricTracker extends Tracker {
 
     @Override
     public void track(@NonNull TrackerKeys keys) {
-        for (Map.Entry<String, Object> entry : keys.getCustomKeys().entrySet()) {
+        TrackerKeys mapped = mapFunc.mapKeys(keys);
+        if (mapped == null) {
+            return;
+        }
+        for (Map.Entry<String, Object> entry : mapped.getCustomKeys().entrySet()) {
             if (entry.getValue() == null) {
                 continue;
             }
@@ -72,6 +87,8 @@ public class FabricTracker extends Tracker {
     }
 
     public static class Builder extends Tracker.Builder<Builder> {
+        private MapFunction mapFunc = null;
+
         Builder(Application context) {
             super(context);
         }
@@ -80,5 +97,9 @@ public class FabricTracker extends Tracker {
             return new FabricTracker(this);
         }
 
+        public Builder mapFunction(MapFunction func) {
+            this.mapFunc = func;
+            return this;
+        }
     }
 }

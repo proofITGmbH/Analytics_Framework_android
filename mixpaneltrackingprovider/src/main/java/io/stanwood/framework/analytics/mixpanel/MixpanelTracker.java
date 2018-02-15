@@ -3,6 +3,7 @@ package io.stanwood.framework.analytics.mixpanel;
 
 import android.app.Application;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
@@ -18,11 +19,13 @@ import io.stanwood.framework.analytics.generic.TrackingKey;
 public class MixpanelTracker extends Tracker {
     private final String appKey;
     private final MapFunction mapFunc;
+    private final String senderId;
     private MixpanelAPI mixpanelAPI;
 
     protected MixpanelTracker(Builder builder) {
         super(builder);
         this.appKey = builder.appKey;
+        this.senderId=builder.senderId;
         if (builder.mapFunc == null) {
             mapFunc = new DefaultMapFunction();
         } else {
@@ -55,13 +58,20 @@ public class MixpanelTracker extends Tracker {
 
     @Override
     public void track(@NonNull TrackerKeys keys) {
+        TrackerKeys mapped = mapFunc.mapKeys(keys);
+        if (mapped == null) {
+            return;
+        }
         MixpanelAPI.People p = mixpanelAPI.getPeople();
-        for (Map.Entry<String, Object> entry : keys.getCustomKeys().entrySet()) {
+        for (Map.Entry<String, Object> entry : mapped.getCustomKeys().entrySet()) {
             String key = entry.getKey();
             if (key.equalsIgnoreCase(TrackingKey.USER_EMAIL)) {
                 p.set("$email", entry.getValue());
             } else if (key.equalsIgnoreCase(TrackingKey.USER_ID)) {
                 p.identify((String) entry.getValue());
+                if (!TextUtils.isEmpty(senderId)) {
+                    p.initPushHandling(senderId);
+                }
             } else {
                 p.set(key, entry.getValue());
             }
@@ -71,6 +81,7 @@ public class MixpanelTracker extends Tracker {
     public static class Builder extends Tracker.Builder<Builder> {
         private String appKey;
         private MapFunction mapFunc = null;
+        private String senderId;
 
         Builder(Application context, String appKey) {
             super(context);
@@ -83,6 +94,18 @@ public class MixpanelTracker extends Tracker {
 
         public Builder mapFunction(MapFunction func) {
             this.mapFunc = func;
+            return this;
+        }
+
+        /**
+         * Set to enable push handling
+         * @param senderID of the Google API Project that registered for Google Cloud Messaging
+         *                 You can find your ID by looking at the URL of in your Google API Console
+         *                 at https://code.google.com/apis/console/; it is the twelve digit number after
+         *                 after "#project:" in the URL address bar on console pages.
+         */
+        public Builder senderId(String senderId) {
+            this.senderId=senderId;
             return this;
         }
 

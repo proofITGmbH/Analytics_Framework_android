@@ -1,17 +1,16 @@
-package io.stanwood.framework.analytics.mixpanel;
+package io.stanwood.framework.analytics.fabric;
 
 
 import android.support.annotation.Nullable;
-
-import java.util.Map;
 
 import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 
 public interface MapFunction {
     @Nullable
-    Map<String, String> map(TrackerParams params);
+    String map(TrackerParams params);
 
     @Nullable
     TrackerKeys mapKeys(TrackerKeys params);
+
 }
