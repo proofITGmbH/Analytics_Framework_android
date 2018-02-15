@@ -20,12 +20,12 @@ allprojects {
 
     project.ext {
         MinSdkVersion = 21
-        TargetSdkVersion = 26
-        CompileSdkVersion = 26
-        SupportLibVersion = '25.2.0'
+        TargetSdkVersion = 27
+        CompileSdkVersion = 27
+        SupportLibVersion = '27.0.2'
         FirebaseVersion = '11.8.0'
         OkHttpVersion = '3.9.1'
-        FrameworkVersion = '0.9.74'
+        FrameworkVersion = '0.9.76'
     }
 }
 
