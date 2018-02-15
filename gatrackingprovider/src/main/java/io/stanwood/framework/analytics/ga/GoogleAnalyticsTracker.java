@@ -51,12 +51,14 @@ public class GoogleAnalyticsTracker extends Tracker {
 
     @SuppressLint("MissingPermission")
     @Override
-    public void init() {
-        tracker = GoogleAnalytics.getInstance(context).newTracker(appKey);
-        tracker.enableExceptionReporting(exceptionTrackingEnabled);
-        tracker.setSampleRate(sampleRate);
-        tracker.enableAutoActivityTracking(activityTracking);
-        tracker.enableAdvertisingIdCollection(adIdCollection);
+    public void ensureInited() {
+        if (tracker == null) {
+            tracker = GoogleAnalytics.getInstance(context).newTracker(appKey);
+            tracker.enableExceptionReporting(exceptionTrackingEnabled);
+            tracker.setSampleRate(sampleRate);
+            tracker.enableAutoActivityTracking(activityTracking);
+            tracker.enableAdvertisingIdCollection(adIdCollection);
+        }
     }
 
     @Override
@@ -79,6 +81,24 @@ public class GoogleAnalyticsTracker extends Tracker {
                 tracker.send(builder.build());
             }
         }
+    }
+
+    @RequiresPermission(
+            allOf = {"android.permission.INTERNET", "android.permission.ACCESS_NETWORK_STATE"}
+    )
+    @Override
+    public void setEnabled() {
+        super.setEnabled();
+        GoogleAnalytics.getInstance(context).setAppOptOut(false);
+    }
+
+    @RequiresPermission(
+            allOf = {"android.permission.INTERNET", "android.permission.ACCESS_NETWORK_STATE"}
+    )
+    @Override
+    public void setDisabled() {
+        super.setDisabled();
+        GoogleAnalytics.getInstance(context).setAppOptOut(true);
     }
 
     private void trackPurchase(TrackerParams params) {
@@ -123,7 +143,7 @@ public class GoogleAnalyticsTracker extends Tracker {
     }
 
     public void setClientId(String id) {
-        if (tracker!=null) {
+        if (tracker != null) {
             tracker.setClientId(id);
         }
     }

@@ -19,6 +19,7 @@ import io.stanwood.framework.analytics.generic.TrackingKey;
 
 public class FabricTracker extends Tracker {
     private final MapFunction mapFunc;
+    private boolean isInited;
 
     protected FabricTracker(Builder builder) {
         super(builder);
@@ -37,10 +38,13 @@ public class FabricTracker extends Tracker {
     }
 
     @Override
-    public void init() {
-        Fabric.with(context, new Crashlytics.Builder()
-                .core(new CrashlyticsCore.Builder().build())
-                .build());
+    public void ensureInited() {
+        if (!isInited) {
+            isInited = true;
+            Fabric.with(context, new Crashlytics.Builder()
+                    .core(new CrashlyticsCore.Builder().build())
+                    .build());
+        }
     }
 
     @Override

@@ -18,6 +18,7 @@ import io.stanwood.framework.analytics.generic.TrackingKey;
 public class AdjustTracker extends Tracker {
     private final String appKey;
     private final MapFunction mapFunc;
+    private boolean isInited;
 
     protected AdjustTracker(Builder builder) {
         super(builder);
@@ -34,10 +35,13 @@ public class AdjustTracker extends Tracker {
     }
 
     @Override
-    public void init() {
-        String environment = isDebug ? AdjustConfig.ENVIRONMENT_SANDBOX : AdjustConfig.ENVIRONMENT_PRODUCTION;
-        AdjustConfig config = new AdjustConfig(context, appKey, environment);
-        Adjust.onCreate(config);
+    public void ensureInited() {
+        if (!isInited) {
+            isInited = true;
+            String environment = isEnabled() ? AdjustConfig.ENVIRONMENT_PRODUCTION : AdjustConfig.ENVIRONMENT_SANDBOX;
+            AdjustConfig config = new AdjustConfig(context, appKey, environment);
+            Adjust.onCreate(config);
+        }
     }
 
     @Override

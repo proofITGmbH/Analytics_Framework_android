@@ -18,6 +18,7 @@ import io.stanwood.framework.analytics.generic.TrackingKey;
 public class TestfairyTrackerImpl extends TestfairyTracker {
     private final String appKey;
     private final MapFunction mapFunc;
+    private boolean isInited;
 
     protected TestfairyTrackerImpl(Builder builder) {
         super(builder);
@@ -37,8 +38,11 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
     }
 
     @Override
-    public void init() {
-        TestFairy.begin(context, appKey);
+    public void ensureInited() {
+        if (!isInited) {
+            isInited = true;
+            TestFairy.begin(context, appKey);
+        }
     }
 
     @Override

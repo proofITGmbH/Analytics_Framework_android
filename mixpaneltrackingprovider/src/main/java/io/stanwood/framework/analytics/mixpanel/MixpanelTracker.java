@@ -25,7 +25,7 @@ public class MixpanelTracker extends Tracker {
     protected MixpanelTracker(Builder builder) {
         super(builder);
         this.appKey = builder.appKey;
-        this.senderId=builder.senderId;
+        this.senderId = builder.senderId;
         if (builder.mapFunc == null) {
             mapFunc = new DefaultMapFunction();
         } else {
@@ -38,8 +38,10 @@ public class MixpanelTracker extends Tracker {
     }
 
     @Override
-    public void init() {
-        mixpanelAPI = MixpanelAPI.getInstance(context, appKey);
+    public void ensureInited() {
+        if (mixpanelAPI == null) {
+            mixpanelAPI = MixpanelAPI.getInstance(context, appKey);
+        }
     }
 
     @Override
@@ -99,13 +101,14 @@ public class MixpanelTracker extends Tracker {
 
         /**
          * Set to enable push handling
+         *
          * @param senderID of the Google API Project that registered for Google Cloud Messaging
          *                 You can find your ID by looking at the URL of in your Google API Console
          *                 at https://code.google.com/apis/console/; it is the twelve digit number after
          *                 after "#project:" in the URL address bar on console pages.
          */
         public Builder senderId(String senderId) {
-            this.senderId=senderId;
+            this.senderId = senderId;
             return this;
         }
 
