@@ -25,7 +25,7 @@ allprojects {
         SupportLibVersion = '27.0.2'
         FirebaseVersion = '11.8.0'
         OkHttpVersion = '3.9.1'
-        FrameworkVersion = '0.9.76'
+        FrameworkVersion = '1.0.0'
     }
 }
 

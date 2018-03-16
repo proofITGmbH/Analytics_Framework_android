@@ -13,10 +13,10 @@ import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingEvent;
 import timber.log.Timber;
 
-public class TrackerTree extends Timber.Tree {
+class TrackerTree extends Timber.Tree {
     private final BaseAnalyticsTracker tracker;
 
-    public TrackerTree(@NonNull BaseAnalyticsTracker tracker) {
+    TrackerTree(@NonNull BaseAnalyticsTracker tracker) {
         this.tracker = tracker;
     }
 

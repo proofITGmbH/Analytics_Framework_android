@@ -13,6 +13,7 @@ import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingEvent;
 import io.stanwood.framework.analytics.generic.TrackingKey;
 import io.stanwood.framework.analytics.testfairy.TestfairyTracker;
+import timber.log.Timber;
 
 public class BaseAnalyticsTracker {
     private final TrackerContainer trackerContainer;
@@ -24,6 +25,7 @@ public class BaseAnalyticsTracker {
             builder.addTracker(optional);
         }
         trackerContainer = builder.build();
+        Timber.plant(new TrackerTree(this));
     }
 
     /**
@@ -35,17 +37,6 @@ public class BaseAnalyticsTracker {
      */
     public void trackScreenView(@NonNull String screenName) {
         trackerContainer.trackEvent(TrackerParams.builder(TrackingEvent.VIEW_ITEM).setName(screenName).build());
-    }
-
-    /**
-     * Tracks an exception.
-     * <br><br>
-     * Will become PROTECTED in the future!
-     *
-     * @param throwable the exception
-     */
-    public void trackException(Throwable throwable) {
-        trackerContainer.trackException(throwable);
     }
 
     /**

@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.stanwood.framework.analytics.BaseAnalyticsTracker;
-import io.stanwood.framework.analytics.TrackerTree;
 import io.stanwood.framework.analytics.adjust.AdjustTracker;
 import io.stanwood.framework.analytics.fabric.FabricTracker;
 import io.stanwood.framework.analytics.firebase.DefaultMapFunction;
@@ -32,8 +31,8 @@ public class AdvancedAppTracker extends BaseAnalyticsTracker {
     private AdvancedAppTracker(@NonNull FabricTracker fabricTracker, @NonNull FirebaseTracker firebaseTracker,
                                @NonNull TestfairyTracker testfairyTracker, @Nullable Tracker... optional) {
         super(fabricTracker, firebaseTracker, testfairyTracker, optional);
-        if (!BuildConfig.DEBUG) {
-            Timber.plant(new TrackerTree(this));
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
         }
     }
 
