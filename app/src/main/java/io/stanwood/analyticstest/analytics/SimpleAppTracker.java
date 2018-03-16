@@ -12,6 +12,7 @@ import io.stanwood.framework.analytics.firebase.FirebaseTracker;
 import io.stanwood.framework.analytics.generic.Tracker;
 import io.stanwood.framework.analytics.testfairy.TestfairyTracker;
 import io.stanwood.framework.analytics.testfairy.TestfairyTrackerImpl;
+import timber.log.Timber;
 
 public class SimpleAppTracker extends BaseAnalyticsTracker {
     private static SimpleAppTracker instance;
@@ -27,6 +28,9 @@ public class SimpleAppTracker extends BaseAnalyticsTracker {
                     FirebaseTracker.builder(application).setExceptionTrackingEnabled(true).setEnabled(!BuildConfig.DEBUG).build(),
                     TestfairyTrackerImpl.builder(application, "KEY").setEnabled(BuildConfig.DEBUG).build());
             FirebasePerformance.getInstance().setPerformanceCollectionEnabled(!BuildConfig.DEBUG);
+            if (BuildConfig.DEBUG) {
+                Timber.plant(new Timber.DebugTree());
+            }
         }
     }
 

@@ -73,6 +73,11 @@ public class FirebaseTracker extends Tracker {
         }
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        firebaseAnalytics.setAnalyticsCollectionEnabled(enabled);
+    }
 
     public static class Builder extends Tracker.Builder<Builder> {
         private MapFunction mapFunc = null;
