@@ -25,7 +25,7 @@ public class BaseAnalyticsTracker {
             builder.addTracker(optional);
         }
         trackerContainer = builder.build();
-        Timber.plant(new TrackerTree(this));
+        Timber.plant(new TrackerTree(trackerContainer));
     }
 
     /**
