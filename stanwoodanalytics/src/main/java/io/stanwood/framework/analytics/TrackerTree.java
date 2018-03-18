@@ -9,15 +9,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
+import io.stanwood.framework.analytics.generic.TrackerContainer;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingEvent;
 import timber.log.Timber;
 
 class TrackerTree extends Timber.Tree {
-    private final BaseAnalyticsTracker tracker;
+    private final TrackerContainer trackerContainer;
 
-    TrackerTree(@NonNull BaseAnalyticsTracker tracker) {
-        this.tracker = tracker;
+    TrackerTree(@NonNull TrackerContainer trackerContainer) {
+        this.trackerContainer = trackerContainer;
     }
 
     @Override
@@ -28,7 +29,7 @@ class TrackerTree extends Timber.Tree {
     @Override
     protected void log(int priority, @Nullable String tag, @Nullable String message, @Nullable Throwable t) {
         if ((priority == Log.ERROR || priority == Log.ASSERT) && t != null) {
-            tracker.trackException(t);
+            trackerContainer.trackException(t);
         } else {
             TrackerParams.Builder builder = TrackerParams.builder(TrackingEvent.DEBUG);
             if (!TextUtils.isEmpty(message)) {
@@ -37,7 +38,7 @@ class TrackerTree extends Timber.Tree {
             if (t != null) {
                 builder.setId(getMessage(t));
             }
-            tracker.trackEvent(builder.build());
+            trackerContainer.trackEvent(builder.build());
         }
     }
 

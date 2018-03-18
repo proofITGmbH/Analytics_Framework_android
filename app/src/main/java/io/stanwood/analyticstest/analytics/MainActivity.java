@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
         AdvancedAppTracker.instance().trackScreenView("home");
         AdvancedAppTracker.instance().trackAdLoaded("123456");
         AdvancedAppTracker.instance().trackShowDetails("id", "details of id");
-        AdvancedAppTracker.instance().trackException(new IllegalStateException("error"));
         Timber.d("message");
         Timber.e(new IllegalStateException("error"));
     }
