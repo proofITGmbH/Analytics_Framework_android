@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 
 import io.stanwood.framework.analytics.fabric.FabricTracker;
 import io.stanwood.framework.analytics.firebase.FirebaseTracker;
+import io.stanwood.framework.analytics.generic.AnalyticsTracker;
 import io.stanwood.framework.analytics.generic.Tracker;
 import io.stanwood.framework.analytics.generic.TrackerContainer;
 import io.stanwood.framework.analytics.generic.TrackerKeys;
@@ -15,7 +16,7 @@ import io.stanwood.framework.analytics.generic.TrackingKey;
 import io.stanwood.framework.analytics.testfairy.TestfairyTracker;
 import timber.log.Timber;
 
-public class BaseAnalyticsTracker {
+public class BaseAnalyticsTracker implements AnalyticsTracker {
     private final TrackerContainer trackerContainer;
 
     protected BaseAnalyticsTracker(@NonNull FabricTracker fabricTracker, @NonNull FirebaseTracker firebaseTracker,
@@ -77,6 +78,7 @@ public class BaseAnalyticsTracker {
      *
      * @param params {@link TrackerParams}
      */
+    @Override
     public void trackEvent(TrackerParams params) {
         trackerContainer.trackEvent(params);
     }
@@ -88,6 +90,7 @@ public class BaseAnalyticsTracker {
      *
      * @param keys the {@link TrackerKeys}
      */
+    @Override
     public void trackKeys(TrackerKeys keys) {
         trackerContainer.trackKeys(keys);
     }

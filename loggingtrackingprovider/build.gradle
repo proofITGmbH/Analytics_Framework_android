@@ -24,7 +24,7 @@ android {
 }
 
 dependencies {
-    implementation project(':generictracker')
+    implementation project(':core')
     implementation "com.android.support:support-annotations:$rootProject.ext.SupportLibVersion"
 }
 
