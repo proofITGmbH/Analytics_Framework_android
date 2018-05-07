@@ -49,8 +49,8 @@ dependencies {
     releaseImplementation 'com.github.stanwood.Analytics_Framework_android:mixpaneltrackingprovider:$latest_version'
 
     // Debugview Tracker - optional
-    debugImplementation 'com.github.stanwood.Analytics_Framework_android:mixpaneltrackingprovider:$latest_version'
-    releaseImplementation 'com.github.stanwood.Analytics_Framework_android:mixpaneltrackingprovider-noop:$latest_version'
+    debugImplementation 'com.github.stanwood.Analytics_Framework_android:loggingtrackingprovider:$latest_version'
+    releaseImplementation 'com.github.stanwood.Analytics_Framework_android:loggingtrackingprovider-noop:$latest_version'
 }
 ```
 
