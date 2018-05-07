@@ -24,7 +24,7 @@ allprojects {
         CompileSdkVersion = 27
         SupportLibVersion = '27.0.2'
         FirebaseVersion = '11.8.0'
-        FrameworkVersion = '1.1.0'
+        FrameworkVersion = '1.1.2'
     }
 }
 
