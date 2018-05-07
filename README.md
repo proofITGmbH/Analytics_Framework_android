@@ -204,17 +204,6 @@ OkHttpClient client = new OkHttpClient.Builder()
 
 You can also use this without modification in release builds, just make sure to use the _noop_ module for these builds instead of the regular one. The _noop_ version doesn't execute any own code and thus doesn't track network calls to Testfairy.
 
-### Firebase Analytics
-
-#### opt-in/out
-
-To disable auto-intialisation of Firebase Performance at app start (e.g. because you want to wait for user-consent) you need to add this line to your manifest:
-
-```xml
-<meta-data android:name="firebase_analytics_collection_enabled" android:value="false" />
-```
-
-Later on you can dynamically enable/disable it using `BaseAnalyticsTracker.setEnabled()`.
 
 ### Firebase Crashlytics (for future reference, currently this library only offers plain old Fabric)
 
