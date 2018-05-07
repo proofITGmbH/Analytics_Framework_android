@@ -3,10 +3,10 @@ package io.stanwood.framework.analytics.testfairy;
 import android.app.Application;
 import android.support.annotation.NonNull;
 
-import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 
 public class TestfairyTrackerImpl extends TestfairyTracker {
+    public static final String TRACKER_NAME = "testfairy";
     private final MapFunction mapFunc;
 
     protected TestfairyTrackerImpl(Builder builder) {
@@ -23,11 +23,6 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
     }
 
     @Override
-    public void ensureInitialized() {
-        // no-op
-    }
-
-    @Override
     public void track(@NonNull TrackerParams params) {
         // no-op
     }
@@ -38,7 +33,12 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
     }
 
     @Override
-    public void track(@NonNull TrackerKeys keys) {
+    public String getTrackerName() {
+        return TRACKER_NAME;
+    }
+
+    @Override
+    protected void enable(boolean enabled) {
         // no-op
     }
 

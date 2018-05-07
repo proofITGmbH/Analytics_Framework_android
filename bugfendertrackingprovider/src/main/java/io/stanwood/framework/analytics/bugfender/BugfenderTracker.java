@@ -8,10 +8,10 @@ import android.support.annotation.RequiresPermission;
 import com.bugfender.sdk.Bugfender;
 
 import io.stanwood.framework.analytics.generic.Tracker;
-import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 
 public class BugfenderTracker extends Tracker {
+    public static final String TRACKER_NAME = "bugfender";
     private final String appKey;
     private final boolean enableUiLogging;
     private final boolean enableLogcatLogging;
@@ -32,20 +32,6 @@ public class BugfenderTracker extends Tracker {
     }
 
     @Override
-    public void ensureInitialized() {
-        if (!isInited) {
-            isInited = true;
-            Bugfender.init(context, appKey, logLevel > 0);
-            if (enableLogcatLogging) {
-                Bugfender.enableLogcatLogging();
-            }
-            if (enableUiLogging) {
-                Bugfender.enableUIEventLogging(context);
-            }
-        }
-    }
-
-    @Override
     public void track(@NonNull TrackerParams params) {
         Bugfender.d(params.getEventName(), String.format("[%s] [%s]", params.getName(), params.getItemId()));
     }
@@ -56,8 +42,25 @@ public class BugfenderTracker extends Tracker {
     }
 
     @Override
-    public void track(@NonNull TrackerKeys keys) {
-        //noop
+    public String getTrackerName() {
+        return TRACKER_NAME;
+    }
+
+    @Override
+    protected void enable(boolean enabled) {
+        // there is no way to disable after bugfender is once inited
+        if (enabled) {
+            if (!isInited) {
+                isInited = true;
+                Bugfender.init(context, appKey, false);
+            }
+            if (enableLogcatLogging) {
+                Bugfender.enableLogcatLogging();
+            }
+            if (enableUiLogging) {
+                Bugfender.enableUIEventLogging(context);
+            }
+        }
     }
 
     public static class Builder extends Tracker.Builder<Builder> {
@@ -77,6 +80,17 @@ public class BugfenderTracker extends Tracker {
 
         public Builder enableLogcatLogging(boolean enable) {
             this.enableLogcatLogging = enable;
+            return this;
+        }
+
+        /**
+         * Enables exception tracking: sends a new issue to bugfender , default false
+         *
+         * @param enable enables exception tracking
+         * @return the builder
+         */
+        public Builder setExceptionTrackingEnabled(boolean enable) {
+            this.exceptionTrackingEnabled = enable;
             return this;
         }
 

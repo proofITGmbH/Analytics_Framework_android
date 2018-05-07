@@ -4,7 +4,6 @@ import android.support.annotation.Nullable;
 
 import java.util.Map;
 
-import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 
 public class DefaultMapFunction implements MapFunction {
@@ -17,7 +16,7 @@ public class DefaultMapFunction implements MapFunction {
 
     @Nullable
     @Override
-    public Map<Integer, Object> mapKeys(TrackerKeys params) {
+    public Map<Integer, Object> mapKeys(TrackerParams params) {
         return null;
     }
 }

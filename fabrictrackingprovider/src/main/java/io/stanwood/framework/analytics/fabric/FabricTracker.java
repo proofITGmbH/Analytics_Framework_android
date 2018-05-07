@@ -13,11 +13,11 @@ import java.util.Map;
 
 import io.fabric.sdk.android.Fabric;
 import io.stanwood.framework.analytics.generic.Tracker;
-import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingKey;
 
 public class FabricTracker extends Tracker {
+    public static final String TRACKER_NAME = "fabric";
     private final MapFunction mapFunc;
     private boolean isInited;
 
@@ -38,8 +38,9 @@ public class FabricTracker extends Tracker {
     }
 
     @Override
-    public void ensureInitialized() {
-        if (!isInited) {
+    protected void enable(boolean enabled) {
+        // there is no way to disable after crashlytics is once inited
+        if (enabled && !isInited) {
             isInited = true;
             Fabric.with(context, new Crashlytics.Builder()
                     .core(new CrashlyticsCore.Builder().build())
@@ -53,6 +54,36 @@ public class FabricTracker extends Tracker {
         if (!TextUtils.isEmpty(mapped)) {
             Crashlytics.log(0, params.getEventName(), mapped);
         }
+        Map<String, Object> mappedKeys = mapFunc.mapKeys(params);
+        if (mappedKeys != null) {
+            for (Map.Entry<String, Object> entry : mappedKeys.entrySet()) {
+                if (entry.getValue() == null) {
+                    continue;
+                }
+                if (entry.getKey().equals(TrackingKey.USER_ID)) {
+                    Crashlytics.setUserIdentifier((String) entry.getValue());
+                } else if (entry.getKey().equals(TrackingKey.USER_EMAIL)) {
+                    Crashlytics.setUserEmail((String) entry.getValue());
+                } else if (entry.getValue() instanceof String) {
+                    Crashlytics.setString(entry.getKey(), (String) entry.getValue());
+                } else if (entry.getValue() instanceof Integer) {
+                    Crashlytics.setInt(entry.getKey(), (Integer) entry.getValue());
+                } else if (entry.getValue() instanceof Boolean) {
+                    Crashlytics.setBool(entry.getKey(), (Boolean) entry.getValue());
+                } else if (entry.getValue() instanceof Long) {
+                    Crashlytics.setLong(entry.getKey(), (Long) entry.getValue());
+                } else if (entry.getValue() instanceof Float) {
+                    Crashlytics.setFloat(entry.getKey(), (Float) entry.getValue());
+                } else if (entry.getValue() instanceof Double) {
+                    Crashlytics.setDouble(entry.getKey(), (Double) entry.getValue());
+                }
+            }
+        }
+    }
+
+    @Override
+    public String getTrackerName() {
+        return TRACKER_NAME;
     }
 
     @Override
@@ -60,41 +91,12 @@ public class FabricTracker extends Tracker {
         Crashlytics.logException(throwable);
     }
 
-    @Override
-    public void track(@NonNull TrackerKeys keys) {
-        TrackerKeys mapped = mapFunc.mapKeys(keys);
-        if (mapped == null) {
-            return;
-        }
-        for (Map.Entry<String, Object> entry : mapped.getCustomKeys().entrySet()) {
-            if (entry.getValue() == null) {
-                continue;
-            }
-            if (entry.getKey().equals(TrackingKey.USER_ID)) {
-                Crashlytics.setUserIdentifier((String) entry.getValue());
-            } else if (entry.getKey().equals(TrackingKey.USER_EMAIL)) {
-                Crashlytics.setUserEmail((String) entry.getValue());
-            } else if (entry.getValue() instanceof String) {
-                Crashlytics.setString(entry.getKey(), (String) entry.getValue());
-            } else if (entry.getValue() instanceof Integer) {
-                Crashlytics.setInt(entry.getKey(), (Integer) entry.getValue());
-            } else if (entry.getValue() instanceof Boolean) {
-                Crashlytics.setBool(entry.getKey(), (Boolean) entry.getValue());
-            } else if (entry.getValue() instanceof Long) {
-                Crashlytics.setLong(entry.getKey(), (Long) entry.getValue());
-            } else if (entry.getValue() instanceof Float) {
-                Crashlytics.setFloat(entry.getKey(), (Float) entry.getValue());
-            } else if (entry.getValue() instanceof Double) {
-                Crashlytics.setDouble(entry.getKey(), (Double) entry.getValue());
-            }
-        }
-    }
-
     public static class Builder extends Tracker.Builder<Builder> {
         private MapFunction mapFunc = null;
 
         Builder(Application context) {
             super(context);
+            this.exceptionTrackingEnabled = true;
         }
 
         public FabricTracker build() {
@@ -103,6 +105,17 @@ public class FabricTracker extends Tracker {
 
         public Builder mapFunction(MapFunction func) {
             this.mapFunc = func;
+            return this;
+        }
+
+        /**
+         * Enables exception tracking: sends handled exceptions to crashlytics
+         *
+         * @param enable enables exception tracking , default true
+         * @return the builder
+         */
+        public Builder setExceptionTrackingEnabled(boolean enable) {
+            this.exceptionTrackingEnabled = enable;
             return this;
         }
     }

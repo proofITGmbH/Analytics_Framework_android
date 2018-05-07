@@ -12,11 +12,11 @@ import org.json.JSONObject;
 import java.util.Map;
 
 import io.stanwood.framework.analytics.generic.Tracker;
-import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingKey;
 
 public class MixpanelTracker extends Tracker {
+    public static final String TRACKER_NAME = "mixpanel";
     private final String appKey;
     private final MapFunction mapFunc;
     private final String senderId;
@@ -38,8 +38,9 @@ public class MixpanelTracker extends Tracker {
     }
 
     @Override
-    public void ensureInitialized() {
-        if (mixpanelAPI == null) {
+    protected void enable(boolean enabled) {
+        // there is no way to disable after mixpanel is once inited
+        if (enabled && mixpanelAPI == null) {
             mixpanelAPI = MixpanelAPI.getInstance(context, appKey);
         }
     }
@@ -51,6 +52,23 @@ public class MixpanelTracker extends Tracker {
             JSONObject props = new JSONObject(mapped);
             mixpanelAPI.track(params.getEventName(), props);
         }
+        Map<String, Object> mappedKeys = mapFunc.mapKeys(params);
+        if (mappedKeys != null) {
+            MixpanelAPI.People p = mixpanelAPI.getPeople();
+            for (Map.Entry<String, Object> entry : mappedKeys.entrySet()) {
+                String key = entry.getKey();
+                if (key.equalsIgnoreCase(TrackingKey.USER_EMAIL)) {
+                    p.set("$email", entry.getValue());
+                } else if (key.equalsIgnoreCase(TrackingKey.USER_ID)) {
+                    p.identify((String) entry.getValue());
+                    if (!TextUtils.isEmpty(senderId)) {
+                        p.initPushHandling(senderId);
+                    }
+                } else {
+                    p.set(key, entry.getValue());
+                }
+            }
+        }
     }
 
     @Override
@@ -59,25 +77,8 @@ public class MixpanelTracker extends Tracker {
     }
 
     @Override
-    public void track(@NonNull TrackerKeys keys) {
-        TrackerKeys mapped = mapFunc.mapKeys(keys);
-        if (mapped == null) {
-            return;
-        }
-        MixpanelAPI.People p = mixpanelAPI.getPeople();
-        for (Map.Entry<String, Object> entry : mapped.getCustomKeys().entrySet()) {
-            String key = entry.getKey();
-            if (key.equalsIgnoreCase(TrackingKey.USER_EMAIL)) {
-                p.set("$email", entry.getValue());
-            } else if (key.equalsIgnoreCase(TrackingKey.USER_ID)) {
-                p.identify((String) entry.getValue());
-                if (!TextUtils.isEmpty(senderId)) {
-                    p.initPushHandling(senderId);
-                }
-            } else {
-                p.set(key, entry.getValue());
-            }
-        }
+    public String getTrackerName() {
+        return TRACKER_NAME;
     }
 
     public static class Builder extends Tracker.Builder<Builder> {
@@ -102,7 +103,7 @@ public class MixpanelTracker extends Tracker {
         /**
          * Set to enable push handling
          *
-         * @param senderID of the Google API Project that registered for Google Cloud Messaging
+         * @param senderId of the Google API Project that registered for Google Cloud Messaging
          *                 You can find your ID by looking at the URL of in your Google API Console
          *                 at https://code.google.com/apis/console/; it is the twelve digit number after
          *                 after "#project:" in the URL address bar on console pages.

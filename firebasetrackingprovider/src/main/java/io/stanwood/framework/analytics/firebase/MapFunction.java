@@ -4,7 +4,8 @@ package io.stanwood.framework.analytics.firebase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import io.stanwood.framework.analytics.generic.TrackerKeys;
+import java.util.Map;
+
 import io.stanwood.framework.analytics.generic.TrackerParams;
 
 public interface MapFunction {
@@ -12,6 +13,6 @@ public interface MapFunction {
     Bundle map(TrackerParams params);
 
     @Nullable
-    TrackerKeys mapKeys(TrackerKeys keys);
+    Map<String, Object> mapKeys(TrackerParams keys);
 
 }

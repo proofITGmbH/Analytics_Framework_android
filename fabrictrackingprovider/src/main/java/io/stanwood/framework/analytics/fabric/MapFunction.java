@@ -3,7 +3,8 @@ package io.stanwood.framework.analytics.fabric;
 
 import android.support.annotation.Nullable;
 
-import io.stanwood.framework.analytics.generic.TrackerKeys;
+import java.util.Map;
+
 import io.stanwood.framework.analytics.generic.TrackerParams;
 
 public interface MapFunction {
@@ -11,6 +12,6 @@ public interface MapFunction {
     String map(TrackerParams params);
 
     @Nullable
-    TrackerKeys mapKeys(TrackerKeys params);
+    Map<String, Object> mapKeys(TrackerParams params);
 
 }

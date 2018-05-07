@@ -1,6 +1,7 @@
 package io.stanwood.analyticstest.analytics;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,7 +18,6 @@ import io.stanwood.framework.analytics.firebase.DefaultMapFunction;
 import io.stanwood.framework.analytics.firebase.FirebaseTracker;
 import io.stanwood.framework.analytics.ga.GoogleAnalyticsTracker;
 import io.stanwood.framework.analytics.generic.Tracker;
-import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingEvent;
 import io.stanwood.framework.analytics.mixpanel.MixpanelTracker;
@@ -28,9 +28,9 @@ import timber.log.Timber;
 public class AdvancedAppTracker extends BaseAnalyticsTracker {
     private static AdvancedAppTracker instance;
 
-    private AdvancedAppTracker(@NonNull FabricTracker fabricTracker, @NonNull FirebaseTracker firebaseTracker,
+    private AdvancedAppTracker(@NonNull Context context, @NonNull FabricTracker fabricTracker, @NonNull FirebaseTracker firebaseTracker,
                                @NonNull TestfairyTracker testfairyTracker, @Nullable Tracker... optional) {
-        super(fabricTracker, firebaseTracker, testfairyTracker, optional);
+        super(context, fabricTracker, firebaseTracker, testfairyTracker, optional);
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
@@ -40,7 +40,6 @@ public class AdvancedAppTracker extends BaseAnalyticsTracker {
         if (instance == null) {
             FirebaseTracker firebaseTracker = FirebaseTracker.builder(application)
                     .setExceptionTrackingEnabled(true)
-                    .setEnabled(!BuildConfig.DEBUG)
                     .mapFunction(new DefaultMapFunction() {
                         @Override
                         public Bundle map(TrackerParams params) {
@@ -52,7 +51,6 @@ public class AdvancedAppTracker extends BaseAnalyticsTracker {
                         }
                     }).build();
             Tracker adjustTracker = AdjustTracker.builder(application, "KEY")
-                    .setEnabled(!BuildConfig.DEBUG)
                     .mapFunction(new io.stanwood.framework.analytics.adjust.DefaultMapFunction() {
                         @Override
                         public String mapContentToken(TrackerParams params) {
@@ -64,7 +62,6 @@ public class AdvancedAppTracker extends BaseAnalyticsTracker {
                     })
                     .build();
             Tracker mixpanelTracker = MixpanelTracker.builder(application, "KEY")
-                    .setEnabled(!BuildConfig.DEBUG)
                     .mapFunction(new io.stanwood.framework.analytics.mixpanel.DefaultMapFunction() {
                         @Override
                         public Map<String, String> map(TrackerParams params) {
@@ -78,11 +75,10 @@ public class AdvancedAppTracker extends BaseAnalyticsTracker {
                     .build();
             Tracker gaTracker = GoogleAnalyticsTracker.builder(application, "KEY")
                     .setExceptionTrackingEnabled(true)
-                    .setEnabled(!BuildConfig.DEBUG)
                     .build();
-            FabricTracker fabricTracker = FabricTracker.builder(application).setEnabled(!BuildConfig.DEBUG).build();
-            TestfairyTracker testfairyTracker = TestfairyTrackerImpl.builder(application, "KEY").setEnabled(BuildConfig.DEBUG).build();
-            instance = new AdvancedAppTracker(fabricTracker, firebaseTracker, testfairyTracker, mixpanelTracker, adjustTracker, gaTracker);
+            FabricTracker fabricTracker = FabricTracker.builder(application).build();
+            TestfairyTracker testfairyTracker = TestfairyTrackerImpl.builder(application, "KEY").build();
+            instance = new AdvancedAppTracker(application, fabricTracker, firebaseTracker, testfairyTracker, mixpanelTracker, adjustTracker, gaTracker);
             FirebasePerformance.getInstance().setPerformanceCollectionEnabled(!BuildConfig.DEBUG);
         }
     }
@@ -99,7 +95,9 @@ public class AdvancedAppTracker extends BaseAnalyticsTracker {
     }
 
     public void trackShowDetails(String id, String name) {
-        trackKeys(TrackerKeys.builder("show_details").addCustomProperty("id", id).addCustomProperty("name", name).build());
-        trackScreenView("details");
+        Map<String, Object> map = new HashMap<>(2);
+        map.put("id", id);
+        map.put("name", name);
+        trackScreenView("details", map);
     }
 }

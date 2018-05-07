@@ -13,11 +13,11 @@ import com.google.firebase.crash.FirebaseCrash;
 import java.util.Map;
 
 import io.stanwood.framework.analytics.generic.Tracker;
-import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingKey;
 
 public class FirebaseTracker extends Tracker {
+    public static final String TRACKER_NAME = "firebase";
     private final MapFunction mapFunc;
     private FirebaseAnalytics firebaseAnalytics;
 
@@ -37,12 +37,14 @@ public class FirebaseTracker extends Tracker {
         return new Builder(context);
     }
 
-    @SuppressLint("MissingPermission")
+
     @Override
-    public void ensureInitialized() {
+    @SuppressLint("MissingPermission")
+    protected void enable(boolean enabled) {
         if (firebaseAnalytics == null) {
             this.firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         }
+        firebaseAnalytics.setAnalyticsCollectionEnabled(enabled);
     }
 
     @Override
@@ -50,6 +52,16 @@ public class FirebaseTracker extends Tracker {
         Bundle mapped = mapFunc.map(params);
         if (mapped != null) {
             firebaseAnalytics.logEvent(params.getEventName(), mapFunc.map(params));
+        }
+        Map<String, Object> mappedKeys = mapFunc.mapKeys(params);
+        if (mappedKeys != null) {
+            for (Map.Entry<String, Object> entry : mappedKeys.entrySet()) {
+                if (entry.getKey().equalsIgnoreCase(TrackingKey.USER_ID)) {
+                    firebaseAnalytics.setUserId(entry.getValue().toString());
+                } else {
+                    firebaseAnalytics.setUserProperty(entry.getKey(), entry.getValue().toString());
+                }
+            }
         }
     }
 
@@ -59,24 +71,8 @@ public class FirebaseTracker extends Tracker {
     }
 
     @Override
-    public void track(@NonNull TrackerKeys keys) {
-        TrackerKeys mapped = mapFunc.mapKeys(keys);
-        if (mapped == null) {
-            return;
-        }
-        for (Map.Entry<String, Object> entry : mapped.getCustomKeys().entrySet()) {
-            if (entry.getKey().equalsIgnoreCase(TrackingKey.USER_ID)) {
-                firebaseAnalytics.setUserId(entry.getValue().toString());
-            } else {
-                firebaseAnalytics.setUserProperty(entry.getKey(), entry.getValue().toString());
-            }
-        }
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-        firebaseAnalytics.setAnalyticsCollectionEnabled(enabled);
+    public String getTrackerName() {
+        return TRACKER_NAME;
     }
 
     public static class Builder extends Tracker.Builder<Builder> {
@@ -84,6 +80,7 @@ public class FirebaseTracker extends Tracker {
 
         Builder(Application context) {
             super(context);
+            this.exceptionTrackingEnabled = true;
         }
 
         @Override
@@ -93,6 +90,18 @@ public class FirebaseTracker extends Tracker {
 
         public Builder mapFunction(MapFunction func) {
             this.mapFunc = func;
+            return this;
+        }
+
+
+        /**
+         * Enables exception tracking: sends handled exceptions to firebase
+         *
+         * @param enable enables exception tracking , default true
+         * @return the builder
+         */
+        public Builder setExceptionTrackingEnabled(boolean enable) {
+            this.exceptionTrackingEnabled = enable;
             return this;
         }
     }

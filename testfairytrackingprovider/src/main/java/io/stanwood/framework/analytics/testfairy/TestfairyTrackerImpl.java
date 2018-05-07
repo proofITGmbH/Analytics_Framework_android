@@ -8,7 +8,8 @@ import android.text.TextUtils;
 
 import com.testfairy.TestFairy;
 
-import io.stanwood.framework.analytics.generic.TrackerKeys;
+import java.util.Map;
+
 import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingKey;
 
@@ -16,6 +17,7 @@ import io.stanwood.framework.analytics.generic.TrackingKey;
  * WHEN ADAPTING THIS CLASS ALWAYS ALSO CHECK THE NO-OP VARIANT!
  */
 public class TestfairyTrackerImpl extends TestfairyTracker {
+    private static final String TRACKER_NAME = "testfairy";
     private final String appKey;
     private final MapFunction mapFunc;
     private boolean isInited;
@@ -38,18 +40,17 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
     }
 
     @Override
-    public void ensureInitialized() {
-        if (!isInited) {
-            isInited = true;
-            TestFairy.begin(context, appKey);
-        }
-    }
-
-    @Override
     public void track(@NonNull TrackerParams params) {
         String mapped = mapFunc.map(params);
         if (!TextUtils.isEmpty(mapped)) {
             TestFairy.addEvent(mapped);
+        }
+        Map<String, Object> mappedKeys = mapFunc.mapKeys(params);
+        if (mappedKeys != null) {
+            String userId = mappedKeys.get(TrackingKey.USER_ID).toString();
+            if (!TextUtils.isEmpty(userId)) {
+                TestFairy.setUserId(userId);
+            }
         }
     }
 
@@ -58,14 +59,18 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
         //noop
     }
 
+
     @Override
-    public void track(@NonNull TrackerKeys keys) {
-        TrackerKeys mapped = mapFunc.mapKeys(keys);
-        if (mapped == null) {
-            return;
-        }
-        if (keys.getCustomKeys().get(TrackingKey.USER_ID) != null) {
-            TestFairy.setUserId(keys.getCustomKeys().get(TrackingKey.USER_ID).toString());
+    public String getTrackerName() {
+        return TRACKER_NAME;
+    }
+
+    @Override
+    protected void enable(boolean enabled) {
+        // there is no way to disable after testfairy is once inited
+        if (enabled && !isInited) {
+            isInited = true;
+            TestFairy.begin(context, appKey);
         }
     }
 

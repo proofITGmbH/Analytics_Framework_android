@@ -62,9 +62,9 @@ public class SimpleAppTracker extends BaseAnalyticsTracker {
     public static synchronized void init(Application application) {
         if (instance == null) {
             instance = new SimpleAppTracker(
-                FabricTracker.builder(application).setEnabled(!BuildConfig.DEBUG).build(),
-                FirebaseTracker.builder(application).setExceptionTrackingEnabled(true).setEnabled(!BuildConfig.DEBUG).build(),
-                TestfairyTrackerImpl.builder(application, "KEY").setEnabled(BuildConfig.DEBUG).build()
+                FabricTracker.builder(application).build(),
+                FirebaseTracker.builder(application).build(),
+                TestfairyTrackerImpl.builder(application, "KEY").build()
             );
 
             // we opted to not calling this within the Firebase tracker module for you because enabling/disabling FirebasePerformance often differs from the sandbox setting for this module
@@ -109,9 +109,28 @@ tracker.trackShowDetails("id", "details of id");
 tracker.trackException(new IllegalStateException("error"));
 ```
 
-The `TrackingEvent` and `TrackingKey` classes contain predefined event names and keys you should use whenever possible when tracking events and keys.
+The `TrackingEvent` class contain predefined event names and keys you should use whenever possible when tracking events and keys.
 
 For a more complete example refer to the `AdvancedAppTracker.java` class in the sample app module.
+
+## Tracker enabled state
+All trackers are DISABLED by default!
+
+Use BaseAnalyticsTrackers `enable(boolean)` function to change the state of your trackers.
+
+e.g. Set all trackers to enabled:
+
+```enable(true);```
+
+Set Fabric and Firebase to enabled (This will not change the enabled state of any other tracker)
+
+```enable(true, FabricTracker.TRACKER_NAME, FirebaseTracker.TRACKER_NAME);```
+
+Trackers enabled state is persisted during app sessions.
+
+Check if a tracker is enabled:
+
+```isTrackerEnabled(FabricTracker.TRACKER_NAME)```
 
 ## Map functions
 
@@ -123,8 +142,6 @@ For example if you have custom labels for Firebase Analytics property keys you c
 
 ```java
 FirebaseTracker firebaseTracker = FirebaseTracker.builder(application)
-    .setExceptionTrackingEnabled(true)
-    .setEnabled(!BuildConfig.DEBUG)
     .mapFunction(new io.stanwood.framework.analytics.firebase.MapFunction() {
         @Override
         public Bundle map(TrackerParams params) {
@@ -141,7 +158,6 @@ Or if you just want to track a specific token to Adjust:
 
 ```java
 Tracker adjustTracker = AdjustTracker.builder(application, "KEY")
-    .setEnabled(!BuildConfig.DEBUG)
     .mapFunction(new io.stanwood.framework.analytics.adjust.MapFunction() {
         @Override
         public String mapContentToken(TrackerParams params) {

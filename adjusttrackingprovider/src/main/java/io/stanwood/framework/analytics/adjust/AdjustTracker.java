@@ -10,12 +10,12 @@ import com.adjust.sdk.AdjustConfig;
 import com.adjust.sdk.AdjustEvent;
 
 import io.stanwood.framework.analytics.generic.Tracker;
-import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingEvent;
 import io.stanwood.framework.analytics.generic.TrackingKey;
 
 public class AdjustTracker extends Tracker {
+    public static final String TRACKER_NAME = "adjust";
     private final String appKey;
     private final MapFunction mapFunc;
     private boolean isInited;
@@ -34,27 +34,21 @@ public class AdjustTracker extends Tracker {
         return new Builder(context, appKey);
     }
 
-    @Override
-    public void ensureInitialized() {
-        if (!isInited) {
-            isInited = true;
-            String environment = isEnabled() ? AdjustConfig.ENVIRONMENT_PRODUCTION : AdjustConfig.ENVIRONMENT_SANDBOX;
-            AdjustConfig config = new AdjustConfig(context, appKey, environment);
-            Adjust.onCreate(config);
-        }
-    }
 
     @Override
     public void track(@NonNull TrackerParams params) {
         String eventToken = mapFunc.mapContentToken(params);
-        if (TextUtils.isEmpty(eventToken)) {
-            return;
+        if (!TextUtils.isEmpty(eventToken)) {
+            AdjustEvent event = new AdjustEvent(eventToken);
+            if (params.getEventName().equalsIgnoreCase(TrackingEvent.PURCHASE)) {
+                event.setRevenue((double) params.getCustomPropertys().get(TrackingKey.PURCHASE_PRICE), "EUR");
+            }
+            Adjust.trackEvent(event);
         }
-        AdjustEvent event = new AdjustEvent(eventToken);
-        if (params.getEventName().equalsIgnoreCase(TrackingEvent.PURCHASE)) {
-            event.setRevenue((double) params.getCustomPropertys().get(TrackingKey.PURCHASE_PRICE), "EUR");
+        String token = params.getCustomProperty(TrackingKey.PUSH_TOKEN);
+        if (!TextUtils.isEmpty(token)) {
+            Adjust.setPushToken(token, context);
         }
-        Adjust.trackEvent(event);
     }
 
     @Override
@@ -63,13 +57,19 @@ public class AdjustTracker extends Tracker {
     }
 
     @Override
-    public void track(@NonNull TrackerKeys keys) {
-        TrackerKeys mapped = mapFunc.mapKeys(keys);
-        if (mapped == null) {
-            return;
-        }
-        if (mapped.getCustomKeys().containsKey(TrackingKey.PUSH_TOKEN)) {
-            Adjust.setPushToken(mapped.getCustomKeys().get(TrackingKey.PUSH_TOKEN).toString(), context);
+    public String getTrackerName() {
+        return TRACKER_NAME;
+    }
+
+    @Override
+    protected void enable(boolean enabled) {
+        if (enabled && !isInited) {
+            isInited = true;
+            String environment = isEnabled() ? AdjustConfig.ENVIRONMENT_PRODUCTION : AdjustConfig.ENVIRONMENT_SANDBOX;
+            AdjustConfig config = new AdjustConfig(context, appKey, environment);
+            Adjust.onCreate(config);
+        } else if (isInited) {
+            Adjust.setEnabled(enabled);
         }
     }
 

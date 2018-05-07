@@ -10,10 +10,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.stanwood.framework.analytics.generic.Tracker;
-import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 
 public class DebugViewTracker extends Tracker {
+    public static final String TRACKER_NAME = "debugvieww";
 
     protected DebugViewTracker(Builder builder) {
         super(builder);
@@ -24,7 +24,12 @@ public class DebugViewTracker extends Tracker {
     }
 
     @Override
-    public void ensureInitialized() {
+    public String getTrackerName() {
+        return TRACKER_NAME;
+    }
+
+    @Override
+    protected void enable(boolean enabled) {
         //noop
     }
 
@@ -34,7 +39,9 @@ public class DebugViewTracker extends Tracker {
         try {
             object.put("time", System.currentTimeMillis());
             object.put("eventname", params.getEventName());
-            if (!TextUtils.isEmpty(params.getItemId())) {
+            if (params.getCustomPropertys() != null) {
+                object.put("itemid", params.getCustomPropertys());
+            } else if (!TextUtils.isEmpty(params.getItemId())) {
                 object.put("itemid", params.getItemId());
             }
             if (!TextUtils.isEmpty(params.getName())) {
@@ -54,26 +61,6 @@ public class DebugViewTracker extends Tracker {
     public void track(@NonNull Throwable throwable) {
 
     }
-
-    @Override
-    public void track(@NonNull TrackerKeys keys) {
-        JSONObject object = new JSONObject();
-        try {
-            object.put("time", System.currentTimeMillis());
-            object.put("eventname", "TRACK_KEYS");
-            if (keys.getCustomKeys() != null) {
-                object.put("name", keys.getCustomKeys().toString());
-            }
-            Intent intent = new Intent("io.stanwood.action.log.tracker");
-            intent.putExtra("data", object.toString());
-            intent.putExtra("appid", context.getPackageName());
-            context.sendBroadcast(intent);
-
-        } catch (JSONException e) {
-            // noop
-        }
-    }
-
 
     public static class Builder extends Tracker.Builder<Builder> {
 

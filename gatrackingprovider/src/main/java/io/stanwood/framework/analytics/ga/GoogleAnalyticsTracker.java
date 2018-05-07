@@ -16,12 +16,12 @@ import com.google.android.gms.analytics.ecommerce.ProductAction;
 import java.util.Map;
 
 import io.stanwood.framework.analytics.generic.Tracker;
-import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingEvent;
 import io.stanwood.framework.analytics.generic.TrackingKey;
 
 public class GoogleAnalyticsTracker extends Tracker {
+    public static final String TRACKER_NAME = "ga";
     private final String appKey;
     private final int sampleRate;
     private final boolean activityTracking;
@@ -49,45 +49,58 @@ public class GoogleAnalyticsTracker extends Tracker {
         return new Builder(context, appKey);
     }
 
-    @SuppressLint("MissingPermission")
     @Override
-    public void ensureInitialized() {
-        if (tracker == null) {
+    @SuppressLint("MissingPermission")
+    protected void enable(boolean enabled) {
+        if (enabled && tracker == null) {
             tracker = GoogleAnalytics.getInstance(context).newTracker(appKey);
             tracker.enableExceptionReporting(exceptionTrackingEnabled);
             tracker.setSampleRate(sampleRate);
             tracker.enableAutoActivityTracking(activityTracking);
             tracker.enableAdvertisingIdCollection(adIdCollection);
         }
+        GoogleAnalytics.getInstance(context).setAppOptOut(!enabled);
     }
 
     @Override
     public void track(@NonNull TrackerParams params) {
         TrackerParams mapped = mapFunc.mapParams(params);
+        HitBuilders.HitBuilder<?> builder = null;
         if (mapped != null) {
             if (mapped.getEventName().equalsIgnoreCase(TrackingEvent.VIEW_ITEM)) {
                 tracker.setScreenName(params.getName());
-                tracker.send(new HitBuilders.ScreenViewBuilder().build());
+                builder = new HitBuilders.ScreenViewBuilder();
             } else if (mapped.getEventName().equalsIgnoreCase(TrackingEvent.PURCHASE)) {
                 trackPurchase(mapped);
             } else {
-                HitBuilders.EventBuilder builder = new HitBuilders.EventBuilder().setCategory(params.getEventName());
+                HitBuilders.EventBuilder eventBuilder = new HitBuilders.EventBuilder().setCategory(params.getEventName());
                 if (!TextUtils.isEmpty(params.getName())) {
-                    builder.setAction(params.getName());
+                    eventBuilder.setAction(params.getName());
                     if (!TextUtils.isEmpty(params.getItemId())) {
-                        builder.setLabel(params.getItemId());
+                        eventBuilder.setLabel(params.getItemId());
                     }
                 }
-                tracker.send(builder.build());
+                builder = eventBuilder;
             }
+        }
+        Map<Integer, Object> mappedKeys = mapFunc.mapKeys(params);
+        if (mappedKeys != null) {
+            if (builder == null) {
+                builder = new HitBuilders.EventBuilder();
+            }
+            for (Map.Entry<Integer, Object> entry : mappedKeys.entrySet()) {
+                builder.setCustomDimension(entry.getKey(), (String) entry.getValue());
+            }
+        }
+        if (builder != null) {
+            tracker.send(builder.build());
         }
     }
 
-    @SuppressLint("MissingPermission")
+
     @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-        GoogleAnalytics.getInstance(context).setAppOptOut(!enabled);
+    public String getTrackerName() {
+        return TRACKER_NAME;
     }
 
     private void trackPurchase(TrackerParams params) {
@@ -116,19 +129,6 @@ public class GoogleAnalyticsTracker extends Tracker {
                         .getDescription(Thread.currentThread().getName(), throwable))
                 .setFatal(false)
                 .build());
-    }
-
-    @Override
-    public void track(@NonNull TrackerKeys keys) {
-        Map<Integer, Object> mapped = mapFunc.mapKeys(keys);
-        if (mapped == null) {
-            return;
-        }
-        HitBuilders.EventBuilder builder = new HitBuilders.EventBuilder();
-        for (Map.Entry<Integer, Object> entry : mapped.entrySet()) {
-            builder.setCustomDimension(entry.getKey(), (String) entry.getValue());
-        }
-        tracker.send(builder.build());
     }
 
     public void setClientId(String id) {
@@ -167,6 +167,18 @@ public class GoogleAnalyticsTracker extends Tracker {
 
         public Builder mapFunction(MapFunction func) {
             this.mapFunc = func;
+            return this;
+        }
+
+
+        /**
+         * Enables exception tracking: sends handled exceptions to google analytics
+         *
+         * @param enable enables exception tracking , default false
+         * @return the builder
+         */
+        public Builder setExceptionTrackingEnabled(boolean enable) {
+            this.exceptionTrackingEnabled = enable;
             return this;
         }
 

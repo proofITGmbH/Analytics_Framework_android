@@ -38,6 +38,10 @@ public class TrackerParams {
         return customProps;
     }
 
+    public <T> T getCustomProperty(String key) {
+        return customProps != null ? (T) customProps.get(key) : null;
+    }
+
     public String getName() {
         return name;
     }
@@ -98,6 +102,14 @@ public class TrackerParams {
                 customProps = new HashMap<>();
             }
             customProps.put(key, value);
+            return this;
+        }
+
+        public Builder addCustomProperty(Map<String, Object> value) {
+            if (customProps == null) {
+                customProps = new HashMap<>();
+            }
+            customProps.putAll(value);
             return this;
         }
 
