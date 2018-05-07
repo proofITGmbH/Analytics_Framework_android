@@ -51,6 +51,10 @@ dependencies {
     // Debugview Tracker - optional
     debugImplementation 'com.github.stanwood.Analytics_Framework_android:loggingtrackingprovider:$latest_version'
     releaseImplementation 'com.github.stanwood.Analytics_Framework_android:loggingtrackingprovider-noop:$latest_version'
+
+    // Infoonline Tracker - optional
+    debugImplementation "com.github.stanwood.Infonline_Analytics_Tracker_android:infoonlinetrackingprovider-noop:$analytics_version"
+    releaseImplementation "com.github.stanwood.Infonline_Analytics_Tracker_android:infoonlinetrackingprovider:$analytics_version"
 }
 ```
 
