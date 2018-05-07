@@ -23,7 +23,7 @@ android {
 }
 
 dependencies {
-    implementation project(':testfairytrackingprovider-shared')
+    api project(':testfairytrackingprovider-shared')
     implementation "com.android.support:support-annotations:$rootProject.ext.SupportLibVersion"
     provided 'com.squareup.okhttp3:okhttp:3.9.1'
 }

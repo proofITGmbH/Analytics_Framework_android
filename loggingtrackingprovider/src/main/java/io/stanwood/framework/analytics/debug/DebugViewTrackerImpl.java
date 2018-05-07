@@ -9,28 +9,16 @@ import android.text.TextUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import io.stanwood.framework.analytics.generic.Tracker;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 
-public class DebugViewTracker extends Tracker {
-    public static final String TRACKER_NAME = "debugvieww";
+public class DebugViewTrackerImpl extends DebugViewTracker {
 
-    protected DebugViewTracker(Builder builder) {
+    protected DebugViewTrackerImpl(Builder builder) {
         super(builder);
     }
 
     public static Builder builder(Application context) {
         return new Builder(context);
-    }
-
-    @Override
-    public String getTrackerName() {
-        return TRACKER_NAME;
-    }
-
-    @Override
-    protected void enable(boolean enabled) {
-        //noop
     }
 
     @Override
@@ -57,22 +45,16 @@ public class DebugViewTracker extends Tracker {
         }
     }
 
-    @Override
-    public void track(@NonNull Throwable throwable) {
-
-    }
-
-    public static class Builder extends Tracker.Builder<Builder> {
+    public static class Builder extends DebugViewTracker.Builder {
 
         Builder(Application context) {
             super(context);
         }
 
         @Override
-        public DebugViewTracker build() {
-            return new DebugViewTracker(this);
+        public DebugViewTrackerImpl build() {
+            return new DebugViewTrackerImpl(this);
         }
-
     }
 
 }

@@ -27,9 +27,12 @@ dependencies {
     implementation "com.android.support:support-annotations:$rootProject.ext.SupportLibVersion"
     api 'com.jakewharton.timber:timber:4.6.1'
     api project(':core')
-    api project(':firebasetrackingprovider-shared')
-    api project(':fabrictrackingprovider-shared')
-    api project(':testfairytrackingprovider-shared')
+    debugApi project(':firebasetrackingprovider-noop')
+    releaseApi project(':firebasetrackingprovider')
+    debugApi project(':fabrictrackingprovider-noop')
+    releaseApi project(':fabrictrackingprovider')
+    debugApi project(':testfairytrackingprovider')
+    releaseApi project(':testfairytrackingprovider-noop')
 }
 
 // build a jar with source files

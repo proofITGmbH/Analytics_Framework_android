@@ -31,8 +31,8 @@ repositories {
 dependencies {
     implementation project(':core')
     implementation "com.android.support:support-annotations:$rootProject.ext.SupportLibVersion"
-    api 'com.crashlytics.sdk.android:crashlytics:2.9.0'
-    implementation project(':fabrictrackingprovider-shared')
+    api 'com.crashlytics.sdk.android:crashlytics:2.9.2'
+    api project(':fabrictrackingprovider-shared')
 }
 
 // build a jar with source files

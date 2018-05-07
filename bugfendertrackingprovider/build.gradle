@@ -27,7 +27,7 @@ dependencies {
     implementation project(':core')
     implementation "com.android.support:support-annotations:$rootProject.ext.SupportLibVersion"
     api 'com.bugfender.sdk:android:1.0'
-    implementation project(':bugfendertrackingprovider-shared')
+    api project(':bugfendertrackingprovider-shared')
 }
 
 // build a jar with source files

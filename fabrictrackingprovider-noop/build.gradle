@@ -27,7 +27,7 @@ android {
 dependencies {
     implementation project(':core')
     implementation "com.android.support:support-annotations:$rootProject.ext.SupportLibVersion"
-    implementation project(':fabrictrackingprovider-shared')
+    api project(':fabrictrackingprovider-shared')
 }
 
 // build a jar with source files

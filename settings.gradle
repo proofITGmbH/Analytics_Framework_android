@@ -6,4 +6,4 @@ include ':app', ':stanwoodanalytics', ':core',
         ':mixpaneltrackingprovider', ':mixpaneltrackingprovider-shared', ':mixpaneltrackingprovider-noop',
         ':adjusttrackingprovider', ':adjusttrackingprovider-shared', ':adjusttrackingprovider-noop',
         ':testfairytrackingprovider-shared', ':testfairytrackingprovider-noop', ':testfairytrackingprovider',
-        ':loggingtrackingprovider'
+        ':loggingtrackingprovider', ':loggingtrackingprovider-shared', ':loggingtrackingprovider-noop'
