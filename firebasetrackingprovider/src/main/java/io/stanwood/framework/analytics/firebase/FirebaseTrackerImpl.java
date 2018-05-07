@@ -36,6 +36,7 @@ public class FirebaseTrackerImpl extends FirebaseTracker {
             this.firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         }
         firebaseAnalytics.setAnalyticsCollectionEnabled(enabled);
+        FirebaseCrash.setCrashCollectionEnabled(enabled && exceptionTrackingEnabled);
     }
 
     @Override
@@ -69,8 +70,8 @@ public class FirebaseTrackerImpl extends FirebaseTracker {
 
         @Override
         public FirebaseTrackerImpl build() {
-            if (mapFunc==null){
-                mapFunc=new DefaultMapFunction();
+            if (mapFunc == null) {
+                mapFunc = new DefaultMapFunction();
             }
             return new FirebaseTrackerImpl(this);
         }
