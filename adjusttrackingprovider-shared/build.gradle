@@ -11,15 +11,6 @@ android {
         versionCode 1
         versionName project.ext.FrameworkVersion
     }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-        }
-        debug {
-        }
-    }
-
 }
 
 dependencies {

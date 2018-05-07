@@ -11,17 +11,6 @@ android {
         versionCode 1
         versionName project.ext.FrameworkVersion
     }
-
-    buildTypes {
-        debug {
-
-        }
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-
 }
 
 dependencies {

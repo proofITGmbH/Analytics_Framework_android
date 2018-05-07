@@ -1,7 +1,4 @@
 -keep public class com.adjust.sdk.** { *; }
--keep class com.google.android.gms.common.ConnectionResult {
-    int SUCCESS;
-}
 -keep class com.google.android.gms.ads.identifier.AdvertisingIdClient {
     com.google.android.gms.ads.identifier.AdvertisingIdClient$Info getAdvertisingIdInfo(android.content.Context);
 }
@@ -20,7 +17,6 @@
     android.os.LocaleList getLocales();
     java.util.Locale locale;
 }
--keep class android.os.LocaledList {
+-keep class android.os.LocaleList {
     java.util.Locale get(int);
 }
--keep public class com.android.installreferrer.** { *; }
