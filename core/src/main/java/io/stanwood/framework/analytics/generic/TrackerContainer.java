@@ -41,7 +41,7 @@ public class TrackerContainer {
     public void enableTrackers(boolean enable, @Nullable String... trackerNames) {
         Tracker[] trackers = trackersArray;
         List<String> names = null;
-        if (trackerNames != null) {
+        if (trackerNames != null && trackerNames.length > 0) {
             names = Arrays.asList(trackerNames);
         }
         for (int i = 0, count = trackers.length; i < count; i++) {
