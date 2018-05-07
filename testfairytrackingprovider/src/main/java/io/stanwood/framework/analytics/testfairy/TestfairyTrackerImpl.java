@@ -8,41 +8,23 @@ import android.text.TextUtils;
 
 import com.testfairy.TestFairy;
 
-import io.stanwood.framework.analytics.generic.TrackerKeys;
+import java.util.Map;
+
 import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingKey;
 
-/**
- * WHEN ADAPTING THIS CLASS ALWAYS ALSO CHECK THE NO-OP VARIANT!
- */
 public class TestfairyTrackerImpl extends TestfairyTracker {
-    private final String appKey;
-    private final MapFunction mapFunc;
     private boolean isInited;
 
-    protected TestfairyTrackerImpl(Builder builder) {
+    TestfairyTrackerImpl(Builder builder) {
         super(builder);
-        this.appKey = builder.appKey;
-        if (builder.mapFunc == null) {
-            mapFunc = new DefaultMapFunction();
-        } else {
-            mapFunc = builder.mapFunc;
-        }
     }
 
     @RequiresPermission(
             allOf = {"android.permission.INTERNET", "android.permission.ACCESS_NETWORK_STATE"}
     )
-    public static Builder builder(Application context, String appKey) {
-        return new Builder(context, appKey);
-    }
-
-    @Override
-    public void ensureInitialized() {
-        if (!isInited) {
-            isInited = true;
-            TestFairy.begin(context, appKey);
-        }
+    public static TestfairyTrackerImpl.Builder builder(Application context, String appKey) {
+        return new TestfairyTrackerImpl.Builder(context, appKey);
     }
 
     @Override
@@ -51,41 +33,32 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
         if (!TextUtils.isEmpty(mapped)) {
             TestFairy.addEvent(mapped);
         }
-    }
-
-    @Override
-    public void track(@NonNull Throwable throwable) {
-        //noop
-    }
-
-    @Override
-    public void track(@NonNull TrackerKeys keys) {
-        TrackerKeys mapped = mapFunc.mapKeys(keys);
-        if (mapped == null) {
-            return;
-        }
-        if (keys.getCustomKeys().get(TrackingKey.USER_ID) != null) {
-            TestFairy.setUserId(keys.getCustomKeys().get(TrackingKey.USER_ID).toString());
+        Map<String, Object> mappedKeys = mapFunc.mapKeys(params);
+        if (mappedKeys != null) {
+            String userId = mappedKeys.get(TrackingKey.USER_ID).toString();
+            if (!TextUtils.isEmpty(userId)) {
+                TestFairy.setUserId(userId);
+            }
         }
     }
 
-    public static class Builder extends TestfairyTracker.Builder<Builder> {
-        private String appKey;
+    @Override
+    protected void enable(boolean enabled) {
+        // there is no way to disable after testfairy is once inited
+        if (enabled && !isInited) {
+            isInited = true;
+            TestFairy.begin(context, appKey);
+        }
+    }
 
-        private MapFunction mapFunc = null;
+    public static class Builder extends TestfairyTracker.Builder {
 
         Builder(Application context, String appKey) {
-            super(context);
-            this.appKey = appKey;
+            super(context, appKey);
         }
 
         public TestfairyTracker build() {
             return new TestfairyTrackerImpl(this);
-        }
-
-        public Builder mapFunction(MapFunction func) {
-            this.mapFunc = func;
-            return this;
         }
     }
 }

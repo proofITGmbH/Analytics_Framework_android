@@ -1,15 +1,17 @@
 package io.stanwood.framework.analytics;
 
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import java.util.Map;
 
 import io.stanwood.framework.analytics.fabric.FabricTracker;
 import io.stanwood.framework.analytics.firebase.FirebaseTracker;
 import io.stanwood.framework.analytics.generic.AnalyticsTracker;
 import io.stanwood.framework.analytics.generic.Tracker;
 import io.stanwood.framework.analytics.generic.TrackerContainer;
-import io.stanwood.framework.analytics.generic.TrackerKeys;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingEvent;
 import io.stanwood.framework.analytics.generic.TrackingKey;
@@ -19,9 +21,9 @@ import timber.log.Timber;
 public class BaseAnalyticsTracker implements AnalyticsTracker {
     private final TrackerContainer trackerContainer;
 
-    protected BaseAnalyticsTracker(@NonNull FabricTracker fabricTracker, @NonNull FirebaseTracker firebaseTracker,
-                                   @NonNull TestfairyTracker bugfenderTracker, @Nullable Tracker... optional) {
-        TrackerContainer.Builder builder = TrackerContainer.builder().addTracker(fabricTracker, firebaseTracker, bugfenderTracker);
+    protected BaseAnalyticsTracker(@NonNull Context context, @NonNull FabricTracker fabricTracker, @NonNull FirebaseTracker firebaseTracker,
+                                   @NonNull TestfairyTracker testfairyTracker, @Nullable Tracker... optional) {
+        TrackerContainer.Builder builder = TrackerContainer.builder(context).addTracker(fabricTracker, firebaseTracker, testfairyTracker);
         if (optional != null) {
             builder.addTracker(optional);
         }
@@ -29,28 +31,55 @@ public class BaseAnalyticsTracker implements AnalyticsTracker {
         Timber.plant(new TrackerTree(trackerContainer));
     }
 
+    /***
+     * Set enable state of given tracker names
+     * @param enable State to set tracker to
+     * @param trackerNames List of tracker names or null to apply to all trackers
+     */
+    public void enable(boolean enable, @Nullable String... trackerNames) {
+        trackerContainer.enableTrackers(enable, trackerNames);
+    }
+
+    /***
+     * Returns the trackers enabled state
+     * @param trackerName Tracker name
+     * @return true if tracker is enabled
+     */
+    public boolean isTrackerEnabled(@NonNull String trackerName) {
+        return trackerContainer.isTrackerEnabled(trackerName);
+    }
+
     /**
      * Tracks a screen view.
      * <br><br>
-     * Will become PROTECTED in the future!
      *
      * @param screenName an unique screen name
      */
     public void trackScreenView(@NonNull String screenName) {
-        trackerContainer.trackEvent(TrackerParams.builder(TrackingEvent.VIEW_ITEM).setName(screenName).build());
+        trackScreenView(screenName, null);
+    }
+
+    /***
+     * Tracks a screen view.
+     * <br><br>
+     *
+     * @param screenName an unique screen name
+     * @param customProps custom property's
+     */
+    protected void trackScreenView(@NonNull String screenName, Map<String, Object> customProps) {
+        trackerContainer.trackEvent(TrackerParams.builder(TrackingEvent.VIEW_ITEM).setName(screenName).addCustomProperty(customProps).build());
     }
 
     /**
      * Tracks a user.
      * <br><br>
-     * Will become PROTECTED in the future!
      *
      * @param id        the user ID
      * @param email     the user's Email address
      * @param pushToken the device push token
      */
     public void trackUser(@Nullable String id, @Nullable String email, @Nullable String pushToken) {
-        trackerContainer.trackKeys(TrackerKeys.builder(TrackingEvent.IDENTIFY_USER)
+        trackerContainer.trackEvent(TrackerParams.builder(TrackingEvent.IDENTIFY_USER)
                 .addCustomProperty(TrackingKey.USER_ID, id)
                 .addCustomProperty(TrackingKey.USER_EMAIL, email)
                 .addCustomProperty(TrackingKey.PUSH_TOKEN, pushToken)
@@ -83,15 +112,4 @@ public class BaseAnalyticsTracker implements AnalyticsTracker {
         trackerContainer.trackEvent(params);
     }
 
-    /**
-     * Tracks custom properties.
-     * <br><br>
-     * Will become PROTECTED in the future!
-     *
-     * @param keys the {@link TrackerKeys}
-     */
-    @Override
-    public void trackKeys(TrackerKeys keys) {
-        trackerContainer.trackKeys(keys);
-    }
 }

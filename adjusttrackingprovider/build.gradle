@@ -10,17 +10,8 @@ android {
         targetSdkVersion project.ext.TargetSdkVersion
         versionCode 1
         versionName project.ext.FrameworkVersion
+        consumerProguardFiles 'proguard-rules.pro'
     }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug {
-        }
-    }
-
 }
 
 dependencies {
@@ -29,6 +20,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-analytics:$rootProject.ext.FirebaseVersion"
     implementation 'com.adjust.sdk:adjust-android:4.12.0'
     implementation 'com.android.installreferrer:installreferrer:1.0'
+    api project(':adjusttrackingprovider-shared')
 }
 
 // build a jar with source files

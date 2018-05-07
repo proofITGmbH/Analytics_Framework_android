@@ -1,1 +1,9 @@
-include ':app', ':firebasetrackingprovider', ':stanwoodanalytics', ':fabrictrackingprovider', ':bugfendertrackingprovider', ':gatrackingprovider', ':mixpaneltrackingprovider', ':adjusttrackingprovider', ':core', ':testfairytrackingprovider-interface', ':testfairytrackingprovider-noop', ':testfairytrackingprovider', ':loggingtrackingprovider'
+include ':app', ':stanwoodanalytics', ':core',
+        ':firebasetrackingprovider', ':firebasetrackingprovider-shared', ':firebasetrackingprovider-noop',
+        ':fabrictrackingprovider', ':fabrictrackingprovider-shared', ':fabrictrackingprovider-noop',
+        ':bugfendertrackingprovider', ':bugfendertrackingprovider-shared', ':bugfendertrackingprovider-noop',
+        ':gatrackingprovider', ':gatrackingprovider-shared', ':gatrackingprovider-noop',
+        ':mixpaneltrackingprovider', ':mixpaneltrackingprovider-shared', ':mixpaneltrackingprovider-noop',
+        ':adjusttrackingprovider', ':adjusttrackingprovider-shared', ':adjusttrackingprovider-noop',
+        ':testfairytrackingprovider-shared', ':testfairytrackingprovider-noop', ':testfairytrackingprovider',
+        ':loggingtrackingprovider', ':loggingtrackingprovider-shared', ':loggingtrackingprovider-noop'
