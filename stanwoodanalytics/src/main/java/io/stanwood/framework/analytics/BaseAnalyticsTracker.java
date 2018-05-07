@@ -37,7 +37,7 @@ public class BaseAnalyticsTracker implements AnalyticsTracker {
      * @param trackerNames List of tracker names or null to apply to all trackers
      */
     public void enable(boolean enable, @Nullable String... trackerNames) {
-        trackerContainer.enableTrackers(enable,trackerNames);
+        trackerContainer.enableTrackers(enable, trackerNames);
     }
 
     /***
@@ -45,7 +45,7 @@ public class BaseAnalyticsTracker implements AnalyticsTracker {
      * @param trackerName Tracker name
      * @return true if tracker is enabled
      */
-    public boolean isTrackerEnabled(@NonNull String trackerName){
+    public boolean isTrackerEnabled(@NonNull String trackerName) {
         return trackerContainer.isTrackerEnabled(trackerName);
     }
 

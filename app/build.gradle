@@ -34,9 +34,19 @@ buildscript {
 
 dependencies {
     implementation project(':stanwoodanalytics')
-    implementation project(':gatrackingprovider')
-    implementation project(':mixpaneltrackingprovider')
-    implementation project(':adjusttrackingprovider')
+    debugImplementation project(':firebasetrackingprovider-noop')
+    releaseImplementation project(':firebasetrackingprovider')
+    debugImplementation project(':fabrictrackingprovider-noop')
+    releaseImplementation project(':fabrictrackingprovider')
+    implementation project(':gatrackingprovider-shared')
+    debugImplementation project(':gatrackingprovider-noop')
+    releaseImplementation project(':gatrackingprovider')
+    implementation project(':mixpaneltrackingprovider-shared')
+    debugImplementation project(':mixpaneltrackingprovider-noop')
+    releaseImplementation project(':mixpaneltrackingprovider')
+    implementation project(':adjusttrackingprovider-shared')
+    debugImplementation project(':adjusttrackingprovider-noop')
+    releaseImplementation project(':adjusttrackingprovider')
     debugImplementation project(':testfairytrackingprovider')
     releaseImplementation project(':testfairytrackingprovider-noop')
     implementation "com.android.support:appcompat-v7:$rootProject.ext.SupportLibVersion"

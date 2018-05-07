@@ -39,7 +39,7 @@ public class DefaultMapFunction implements MapFunction {
             bundle = bundle != null ? bundle : new Bundle();
             bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, params.getName());
         }
-        return bundle;
+        return null;
     }
 
     @Nullable

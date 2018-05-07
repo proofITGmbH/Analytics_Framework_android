@@ -13,30 +13,18 @@ import java.util.Map;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingKey;
 
-/**
- * WHEN ADAPTING THIS CLASS ALWAYS ALSO CHECK THE NO-OP VARIANT!
- */
 public class TestfairyTrackerImpl extends TestfairyTracker {
-    private static final String TRACKER_NAME = "testfairy";
-    private final String appKey;
-    private final MapFunction mapFunc;
     private boolean isInited;
 
-    protected TestfairyTrackerImpl(Builder builder) {
+    TestfairyTrackerImpl(Builder builder) {
         super(builder);
-        this.appKey = builder.appKey;
-        if (builder.mapFunc == null) {
-            mapFunc = new DefaultMapFunction();
-        } else {
-            mapFunc = builder.mapFunc;
-        }
     }
 
     @RequiresPermission(
             allOf = {"android.permission.INTERNET", "android.permission.ACCESS_NETWORK_STATE"}
     )
-    public static Builder builder(Application context, String appKey) {
-        return new Builder(context, appKey);
+    public static TestfairyTrackerImpl.Builder builder(Application context, String appKey) {
+        return new TestfairyTrackerImpl.Builder(context, appKey);
     }
 
     @Override
@@ -55,17 +43,6 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
     }
 
     @Override
-    public void track(@NonNull Throwable throwable) {
-        //noop
-    }
-
-
-    @Override
-    public String getTrackerName() {
-        return TRACKER_NAME;
-    }
-
-    @Override
     protected void enable(boolean enabled) {
         // there is no way to disable after testfairy is once inited
         if (enabled && !isInited) {
@@ -74,23 +51,14 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
         }
     }
 
-    public static class Builder extends TestfairyTracker.Builder<Builder> {
-        private String appKey;
-
-        private MapFunction mapFunc = null;
+    public static class Builder extends TestfairyTracker.Builder {
 
         Builder(Application context, String appKey) {
-            super(context);
-            this.appKey = appKey;
+            super(context, appKey);
         }
 
         public TestfairyTracker build() {
             return new TestfairyTrackerImpl(this);
-        }
-
-        public Builder mapFunction(MapFunction func) {
-            this.mapFunc = func;
-            return this;
         }
     }
 }
