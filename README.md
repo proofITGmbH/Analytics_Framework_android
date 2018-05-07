@@ -170,6 +170,12 @@ Tracker adjustTracker = AdjustTracker.builder(application, "KEY")
     .build();
 ```
 
+## Opt-in/out
+
+To implement opt-in or out of tracking we recommend to use the `BaseAnalyticsTracker.setEnabled()` method. Remember that trackers are disabled by default if you build them using the `Tracker.Builder` and don't call `setEnabled(true)` on that builder. For details check the [Tracker specific documentation](#tracker-specific-documentation).
+
+**Always double-check your app by actively testing it after implementing opt-in/out to ensure that all trackers have been properly configured!**
+
 ## Tracker specific documentation
 
 ### Testfairy
@@ -201,3 +207,49 @@ OkHttpClient client = new OkHttpClient.Builder()
 ```
 
 You can also use this without modification in release builds, just make sure to use the _noop_ module for these builds instead of the regular one. The _noop_ version doesn't execute any own code and thus doesn't track network calls to Testfairy.
+
+### Firebase Analytics
+
+#### opt-in/out
+
+To disable auto-intialisation of Firebase Performance at app start (e.g. because you want to wait for user-consent) you need to add this line to your manifest:
+
+```xml
+<meta-data android:name="firebase_analytics_collection_enabled" android:value="false" />
+```
+
+Later on you can dynamically enable/disable it using `BaseAnalyticsTracker.setEnabled()`.
+
+### Firebase Crashlytics (for future reference, currently this library only offers plain old Fabric)
+
+#### opt-in/out
+
+To disable auto-initialisation of Firebase Crashlytics at app start (e.g. because you want to wait for user-consent) you need to add this line to your manifest:
+
+```xml
+<meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
+```
+
+For more details check out the [Firebase Crashlytics documentation](https://firebase.google.com/docs/crashlytics/customize-crash-reports#enable_opt_in_reporting).
+
+The initialisation itself will be taken care of by the Analytics library in the future.
+
+_It is **not** possible to reenable crash tracking for a running session. The user has to restart the app to get crash tracking back to work._
+
+### Firebase Performance (not included in the library)
+
+#### opt-in/out
+
+To disable auto-intialisation of Firebase Performance at app start (e.g. because you want to wait for user-consent) you need to add this line to your manifest:
+
+```xml
+<meta-data android:name="firebase_performance_collection_enabled" android:value="false" />
+```
+
+Later on you can enable it with
+
+```java
+FirebasePerformance.getInstance().setPerformanceCollectionEnabled(true);
+```
+
+as outlined in the example above.
