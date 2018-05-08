@@ -13,8 +13,8 @@ class TrackerSettingsService {
         preferences = context.getSharedPreferences("tracker_settings", Context.MODE_PRIVATE);
     }
 
-    boolean isTrackerEnabled(@NonNull String trackerName) {
-        return preferences.getBoolean(trackerName, false);
+    boolean isTrackerEnabled(@NonNull String trackerName, boolean defaultValue) {
+        return preferences.getBoolean(trackerName, defaultValue);
     }
 
     void storeTrackerState(@NonNull String trackerName, boolean enabled) {
