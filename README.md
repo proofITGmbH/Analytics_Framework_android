@@ -232,3 +232,9 @@ FirebasePerformance.getInstance().setPerformanceCollectionEnabled(true);
 ```
 
 as outlined in the example above.
+
+### Infoonline
+As the SDK is only available as AAR file the library needs to be copied into application's library folder and include via:
+```groovy
+releaseImplementation 'de.infonline.lib:infonlinelib_x.x.x@aar'
+```
