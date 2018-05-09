@@ -12,7 +12,6 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import java.util.Map;
 
 import io.fabric.sdk.android.Fabric;
-import io.stanwood.framework.analytics.generic.Tracker;
 import io.stanwood.framework.analytics.generic.TrackerParams;
 import io.stanwood.framework.analytics.generic.TrackingKey;
 
@@ -83,8 +82,8 @@ public class FabricTrackerImpl extends FabricTracker {
     public static class Builder extends FabricTracker.Builder {
         Builder(Application context) {
             super(context);
-            this.exceptionTrackingEnabled = true;
         }
+
         public FabricTrackerImpl build() {
             return new FabricTrackerImpl(this);
         }
