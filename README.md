@@ -167,7 +167,7 @@ Set Fabric and Firebase to enabled (This will not change the enabled state of an
 
 ```enable(true, FabricTracker.TRACKER_NAME, FirebaseTracker.TRACKER_NAME);```
 
-Trackers enabled state is persisted during app sessions. 
+Trackers enabled state is persisted over app sessions. 
 
 To check if there is currently at least one running tracker:
 
