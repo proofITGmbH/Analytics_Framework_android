@@ -43,6 +43,11 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
     }
 
     @Override
+    public void track(@NonNull Throwable throwable) {
+        TestFairy.logThrowable(throwable);
+    }
+
+    @Override
     protected void enable(boolean enabled) {
         // there is no way to disable after testfairy is once inited
         if (enabled && !isInited) {
