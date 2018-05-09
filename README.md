@@ -122,6 +122,9 @@ The `TrackingEvent` class contain predefined event names and keys you should use
 
 For a more complete example refer to the `AdvancedAppTracker.java` class in the sample app module.
 
+## Logging and catched exceptions
+
+To log catched exceptions and arbitrary messages just use Timber's static methods (you need to use the default Timber instance, don't create a new one as this one won't be picked up by the Analytics library!).
 
 ## Map functions
 
