@@ -18,7 +18,7 @@ public abstract class TestfairyTracker extends Tracker {
         } else {
             mapFunc = builder.mapFunc;
         }
-        this.appKey=builder.appKey;
+        this.appKey = builder.appKey;
     }
 
     @Override
@@ -50,12 +50,24 @@ public abstract class TestfairyTracker extends Tracker {
         Builder(Application context, String appKey) {
             super(context);
             this.appKey = appKey;
+            this.exceptionTrackingEnabled = true;
         }
 
         public abstract TestfairyTracker build();
 
         public Builder mapFunction(MapFunction func) {
             this.mapFunc = func;
+            return this;
+        }
+
+        /**
+         * Enables exception tracking: sends handled exceptions to crashlytics
+         *
+         * @param enable enables exception tracking , default true
+         * @return the builder
+         */
+        public Builder setExceptionTrackingEnabled(boolean enable) {
+            this.exceptionTrackingEnabled = enable;
             return this;
         }
     }
