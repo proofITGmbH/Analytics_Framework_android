@@ -25,10 +25,18 @@ Then add this to you app's `build.gradle`:
 dependencies {
     // AAR versions are available for all artifacts as well!
 
-    // includes Fabric tracker and Firebase tracker by default
+    // base 
     implementation 'com.github.stanwood.Analytics_Framework_android:stanwoodanalytics:$latest_version'
+   
+    // fabric - non optional
+    debugImplementation "com.github.stanwood.Analytics_Framework_android:fabrictrackingprovider-noop:$analytics_version"
+    releaseImplementation "com.github.stanwood.Analytics_Framework_android:fabrictrackingprovider:$analytics_version"
+    
+    // firebase - non optional
+    debugImplementation "com.github.stanwood.Analytics_Framework_android:firebasetrackingprovider-noop:$analytics_version"
+    releaseImplementation "com.github.stanwood.Analytics_Framework_android:firebasetrackingprovider:$analytics_version"
 
-    // Testfairy tracker - not optional, but also available as a no-op variant which doesn't pull in any dependencies or permissions
+    // Testfairy tracker
     debugImplementation 'com.github.stanwood.Analytics_Framework_android:testfairytrackingprovider:$latest_version'
     releaseImplementation 'com.github.stanwood.Analytics_Framework_android:testfairytrackingprovider-noop:$latest_version'
 
