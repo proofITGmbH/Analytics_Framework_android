@@ -29,8 +29,22 @@ public class TrackerContainer {
         Tracker[] trackers = trackersArray;
         for (int i = 0, count = trackers.length; i < count; i++) {
             Tracker tracker = trackers[i];
-            tracker.setEnabled(settingsService.isTrackerEnabled(tracker.getTrackerName()));
+            tracker.setEnabled(settingsService.isTrackerEnabled(tracker.getTrackerName(), true));
         }
+    }
+
+    /***
+     * Check if there is at least one enabled tracker
+     * @return true if container contains enabled trackers
+     */
+    public boolean hasEnabledTracker() {
+        Tracker[] trackers = trackersArray;
+        for (int i = 0, count = trackers.length; i < count; i++) {
+            if (trackers[i].isEnabled()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /***
@@ -41,7 +55,7 @@ public class TrackerContainer {
     public void enableTrackers(boolean enable, @Nullable String... trackerNames) {
         Tracker[] trackers = trackersArray;
         List<String> names = null;
-        if (trackerNames != null) {
+        if (trackerNames != null && trackerNames.length > 0) {
             names = Arrays.asList(trackerNames);
         }
         for (int i = 0, count = trackers.length; i < count; i++) {

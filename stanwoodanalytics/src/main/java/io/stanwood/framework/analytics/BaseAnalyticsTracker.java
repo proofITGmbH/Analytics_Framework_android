@@ -18,6 +18,9 @@ import io.stanwood.framework.analytics.generic.TrackingKey;
 import io.stanwood.framework.analytics.testfairy.TestfairyTracker;
 import timber.log.Timber;
 
+/**
+ * TrackerContainer proxy to force default tracker integration
+ */
 public class BaseAnalyticsTracker implements AnalyticsTracker {
     private final TrackerContainer trackerContainer;
 
@@ -38,6 +41,14 @@ public class BaseAnalyticsTracker implements AnalyticsTracker {
      */
     public void enable(boolean enable, @Nullable String... trackerNames) {
         trackerContainer.enableTrackers(enable, trackerNames);
+    }
+
+    /***
+     * Check if there is at least one enabled tracker
+     * @return true if there are enabled trackers
+     */
+    public boolean hasEnabledTracker() {
+        return trackerContainer.hasEnabledTracker();
     }
 
     /***

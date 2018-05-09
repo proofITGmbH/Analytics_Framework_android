@@ -51,6 +51,10 @@ dependencies {
     // Debugview Tracker - optional
     debugImplementation 'com.github.stanwood.Analytics_Framework_android:loggingtrackingprovider:$latest_version'
     releaseImplementation 'com.github.stanwood.Analytics_Framework_android:loggingtrackingprovider-noop:$latest_version'
+
+    // Infoonline Tracker - optional
+    debugImplementation "com.github.stanwood.Infonline_Analytics_Tracker_android:infoonlinetrackingprovider-noop:$analytics_version"
+    releaseImplementation "com.github.stanwood.Infonline_Analytics_Tracker_android:infoonlinetrackingprovider:$analytics_version"
 }
 ```
 
@@ -151,27 +155,30 @@ Tracker adjustTracker = AdjustTracker.builder(application, "KEY")
 
 ## Opt-in/out
 
-### All trackers are DISABLED by default!
-
+All trackers are ENABLED by default! 
+Check [noop module's](#noop-modules) to disable tracking in debug builds.
 Use BaseAnalyticsTrackers `enable(boolean)` function to change the state of your trackers.
 
-e.g. Set all trackers to enabled:
+e.g. Set all trackers to disabled:
 
-```enable(true);```
+```enable(false);```
 
 Set Fabric and Firebase to enabled (This will not change the enabled state of any other tracker)
 
 ```enable(true, FabricTracker.TRACKER_NAME, FirebaseTracker.TRACKER_NAME);```
 
-Trackers enabled state is persisted during app sessions.
+Trackers enabled state is persisted over app sessions. 
 
-Check if a tracker is enabled:
+To check if there is currently at least one running tracker:
+
+```hasEnabledTracker()```
+
+for a specific tracker use:
 
 ```isTrackerEnabled(FabricTracker.TRACKER_NAME)```
 
 
 **Always double-check your app by actively testing it after implementing opt-in/out to ensure that all trackers have been properly configured!**
-
 #### _noop_ module`s
 All tracking providers are also implemented as an `noop` version. 
 They don`t execute any tracking code and doesn't pull in any dependencies or permissions.

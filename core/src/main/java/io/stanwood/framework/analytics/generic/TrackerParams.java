@@ -1,6 +1,7 @@
 package io.stanwood.framework.analytics.generic;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -105,11 +106,13 @@ public class TrackerParams {
             return this;
         }
 
-        public Builder addCustomProperty(Map<String, Object> value) {
-            if (customProps == null) {
-                customProps = new HashMap<>();
+        public Builder addCustomProperty(@Nullable Map<String, Object> value) {
+            if (value != null && !value.isEmpty()) {
+                if (customProps == null) {
+                    customProps = new HashMap<>();
+                }
+                customProps.putAll(value);
             }
-            customProps.putAll(value);
             return this;
         }
 
