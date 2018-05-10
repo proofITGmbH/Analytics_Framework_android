@@ -1,4 +1,4 @@
 -keep class com.testfairy.** { *; }
 -dontwarn com.testfairy.**
--keep io.stanwood.framework.analytics.testfairy.**
+-keep class io.stanwood.framework.analytics.testfairy.**
 -keepattributes Exceptions, Signature, LineNumberTable
