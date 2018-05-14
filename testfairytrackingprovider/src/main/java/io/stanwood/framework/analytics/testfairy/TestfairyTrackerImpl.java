@@ -35,7 +35,8 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
         }
         Map<String, Object> mappedKeys = mapFunc.mapKeys(params);
         if (mappedKeys != null) {
-            String userId = mappedKeys.get(TrackingKey.USER_ID).toString();
+            Object v;
+            String userId = ((v = mappedKeys.get(TrackingKey.USER_ID)) != null) ? v.toString() : null;
             if (!TextUtils.isEmpty(userId)) {
                 TestFairy.setUserId(userId);
             }

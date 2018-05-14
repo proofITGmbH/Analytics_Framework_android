@@ -48,6 +48,9 @@ public class FirebaseTrackerImpl extends FirebaseTracker {
         Map<String, Object> mappedKeys = mapFunc.mapKeys(params);
         if (mappedKeys != null) {
             for (Map.Entry<String, Object> entry : mappedKeys.entrySet()) {
+                if (entry.getValue() == null) {
+                    continue;
+                }
                 if (entry.getKey().equalsIgnoreCase(TrackingKey.USER_ID)) {
                     firebaseAnalytics.setUserId(entry.getValue().toString());
                 } else {
