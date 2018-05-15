@@ -12,6 +12,7 @@ public abstract class GoogleAnalyticsTracker extends Tracker {
     public static final String TRACKER_NAME = "ga";
     protected final String appKey;
     protected final int sampleRate;
+    protected final boolean anonymizeIp;
     protected final boolean activityTracking;
     protected final boolean adIdCollection;
     protected final MapFunction mapFunc;
@@ -22,6 +23,7 @@ public abstract class GoogleAnalyticsTracker extends Tracker {
         this.sampleRate = builder.sampleRate;
         this.activityTracking = builder.activityTracking;
         this.adIdCollection = builder.adIdCollection;
+        this.anonymizeIp = builder.anonymizeIp;
         if (builder.mapFunc == null) {
             mapFunc = new DefaultMapFunction();
         } else {
@@ -62,6 +64,7 @@ public abstract class GoogleAnalyticsTracker extends Tracker {
         private String appKey;
         private boolean activityTracking = false;
         private boolean adIdCollection = false;
+        private boolean anonymizeIp = true;
         private MapFunction mapFunc = null;
 
         Builder(Application context, String appKey) {
@@ -89,6 +92,16 @@ public abstract class GoogleAnalyticsTracker extends Tracker {
             return this;
         }
 
+        /**
+         * Anonymize Users ip
+         *
+         * @param enabled enables / disabled ip anonymization , default true
+         * @return the builder
+         */
+        public Builder anonymizeIp(boolean enabled) {
+            this.anonymizeIp = enabled;
+            return this;
+        }
 
         /**
          * Enables exception tracking: sends handled exceptions to google analytics

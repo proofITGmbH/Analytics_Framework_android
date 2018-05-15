@@ -42,6 +42,7 @@ public class GoogleAnalyticsTrackerImpl extends GoogleAnalyticsTracker {
             tracker.setSampleRate(sampleRate);
             tracker.enableAutoActivityTracking(activityTracking);
             tracker.enableAdvertisingIdCollection(adIdCollection);
+            tracker.setAnonymizeIp(anonymizeIp);
         }
         GoogleAnalytics.getInstance(context).setAppOptOut(!enabled);
     }
