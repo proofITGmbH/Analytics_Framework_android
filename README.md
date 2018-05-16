@@ -247,6 +247,14 @@ FirebasePerformance.getInstance().setPerformanceCollectionEnabled(true);
 
 as outlined in the example above.
 
+### Firebase Analytics
+
+#### Debugging events
+
+To ensure that events are sent check out the documentation over at https://firebase.google.com/docs/analytics/debugview. However this doesn't seem to always work properly.
+
+What does work though is using the adb command mentioned at the beginning of the Firebase DebugView documentation. You will see the events being logged to the `app-measurement.com` host when proxying. This can be very helpful to ensure that your opt-out implementation really works.
+
 ### Infoonline
 As the SDK is only available as AAR file the library needs to be copied into application's library folder and include via:
 ```groovy
