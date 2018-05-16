@@ -247,6 +247,22 @@ FirebasePerformance.getInstance().setPerformanceCollectionEnabled(true);
 
 as outlined in the example above.
 
+#### Debugging events
+
+To enter debug mode execute the following on your terminal:
+
+```
+adb shell setprop debug.firebase.analytics.app <package_name>
+```
+
+This causes events to be sent to the server right away. Look out for requests to the `app-measurement.com` host.
+
+You can disable debug mode by executing
+
+```
+adb shell setprop debug.firebase.analytics.app .none.
+```
+
 ### Firebase Analytics
 
 #### Debugging events
