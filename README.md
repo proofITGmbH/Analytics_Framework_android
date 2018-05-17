@@ -247,6 +247,30 @@ FirebasePerformance.getInstance().setPerformanceCollectionEnabled(true);
 
 as outlined in the example above.
 
+#### Debugging events
+
+To enter debug mode execute the following on your terminal:
+
+```
+adb shell setprop debug.firebase.analytics.app <package_name>
+```
+
+This causes events to be sent to the server right away. Look out for requests to the `app-measurement.com` host.
+
+You can disable debug mode by executing
+
+```
+adb shell setprop debug.firebase.analytics.app .none.
+```
+
+### Firebase Analytics
+
+#### Debugging events
+
+To ensure that events are sent check out the documentation over at https://firebase.google.com/docs/analytics/debugview. However this doesn't seem to always work properly.
+
+What does work though is using the adb command mentioned at the beginning of the Firebase DebugView documentation. You will see the events being logged to the `app-measurement.com` host when proxying. This can be very helpful to ensure that your opt-out implementation really works.
+
 ### Infoonline
 As the SDK is only available as AAR file the library needs to be copied into application's library folder and include via:
 ```groovy
