@@ -50,10 +50,12 @@ public class TestfairyTrackerImpl extends TestfairyTracker {
 
     @Override
     protected void enable(boolean enabled) {
-        // there is no way to disable after testfairy is once inited
         if (enabled && !isInited) {
             isInited = true;
             TestFairy.begin(context, appKey);
+        } else if (!enabled && isInited) {
+            TestFairy.stop();
+            isInited = false;
         }
     }
 
