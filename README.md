@@ -63,6 +63,10 @@ dependencies {
     // Infoonline Tracker - optional
     debugImplementation "com.github.stanwood.Infonline_Analytics_Tracker_android:infoonlinetrackingprovider-noop:$analytics_version"
     releaseImplementation "com.github.stanwood.Infonline_Analytics_Tracker_android:infoonlinetrackingprovider:$analytics_version"
+
+    // Facebook Tracker - optional
+    debugImplementation "com.github.stanwood.Analytics_Framework_android:facebooktrackingprovider-noop:$analytics_version"
+    releaseImplementation "com.github.stanwood.Analytics_Framework_android:facebooktrackingprovider:$analytics_version"
 }
 ```
 
