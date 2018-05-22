@@ -27,9 +27,13 @@ public class MixpanelTrackerImpl extends MixpanelTracker {
 
     @Override
     protected void enable(boolean enabled) {
-        // there is no way to disable after mixpanel is once inited
-        if (enabled && mixpanelAPI == null) {
-            mixpanelAPI = MixpanelAPI.getInstance(context, appKey);
+        if (enabled) {
+            if (mixpanelAPI == null) {
+                mixpanelAPI = MixpanelAPI.getInstance(context, appKey);
+            }
+            mixpanelAPI.optInTracking();
+        } else if (mixpanelAPI != null) {
+            mixpanelAPI.optOutTracking();
         }
     }
 
