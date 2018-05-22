@@ -33,7 +33,6 @@ public class FacebookTrackerImpl extends FacebookTracker {
             if (eventsLogger == null) {
                 FacebookSdk.setApplicationId(appKey);
                 FacebookSdk.sdkInitialize(context);
-                FacebookSdk.setIsDebugEnabled(true);
                 FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
                 FacebookSdk.setLimitEventAndDataUsage(context, false);
                 eventsLogger = AppEventsLogger.newLogger(context);
