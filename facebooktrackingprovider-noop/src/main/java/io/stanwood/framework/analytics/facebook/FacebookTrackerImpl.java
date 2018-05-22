@@ -9,13 +9,13 @@ public class FacebookTrackerImpl extends FacebookTracker {
         super(builder);
     }
 
-    public static Builder builder(Application context) {
-        return new Builder(context);
+    public static Builder builder(Application context, String appKey) {
+        return new Builder(context, appKey);
     }
 
     public static class Builder extends FacebookTracker.Builder {
-        Builder(Application context) {
-            super(context, null);
+        Builder(Application context, String appKey) {
+            super(context, appKey);
         }
         public FacebookTrackerImpl build() {
             return new FacebookTrackerImpl(this);
