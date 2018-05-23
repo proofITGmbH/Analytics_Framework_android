@@ -61,6 +61,7 @@ public class BaseAnalyticsTracker implements AnalyticsTracker {
         if (!enable) {
             new OptOutDialog().show(context.getSupportFragmentManager(), "analytics_opt_out");
         }
+        trackEvent(TrackerParams.builder(enable ? "tracking_opt_in" : "tracking_opt_out").build());
     }
 
 
