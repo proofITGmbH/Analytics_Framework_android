@@ -57,11 +57,11 @@ public class BaseAnalyticsTracker implements AnalyticsTracker {
      * @param trackerNames List of tracker names or null to apply to all trackers
      */
     public void enable(@NonNull FragmentActivity context, boolean enable, @Nullable String... trackerNames) {
+        trackEvent(TrackerParams.builder(enable ? "tracking_opt_in" : "tracking_opt_out").build());
         trackerContainer.enableTrackers(enable, trackerNames);
         if (!enable) {
             new OptOutDialog().show(context.getSupportFragmentManager(), "analytics_opt_out");
         }
-        trackEvent(TrackerParams.builder(enable ? "tracking_opt_in" : "tracking_opt_out").build());
     }
 
 
