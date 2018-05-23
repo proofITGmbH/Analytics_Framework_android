@@ -2,8 +2,10 @@ package io.stanwood.framework.analytics;
 
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 
 import java.util.Map;
 
@@ -35,12 +37,41 @@ public class BaseAnalyticsTracker implements AnalyticsTracker {
     }
 
     /***
-     * Set enable state of given tracker names
+     * Convenience function for setting state from a e.g. view context
+     * @param context FragmentActivity child context
      * @param enable State to set tracker to
      * @param trackerNames List of tracker names or null to apply to all trackers
      */
-    public void enable(boolean enable, @Nullable String... trackerNames) {
+    public void enable(@NonNull Context context, boolean enable, @Nullable String... trackerNames) {
+        FragmentActivity activity = findActivity(context);
+        if (activity == null) {
+            throw new IllegalStateException("Illegal context used");
+        }
+        this.enable(activity, enable, trackerNames);
+    }
+
+    /***
+     * Set enable state of given tracker names
+     * @param context FragmentActivity context
+     * @param enable State to set tracker to
+     * @param trackerNames List of tracker names or null to apply to all trackers
+     */
+    public void enable(@NonNull FragmentActivity context, boolean enable, @Nullable String... trackerNames) {
         trackerContainer.enableTrackers(enable, trackerNames);
+        if (!enable) {
+            new OptOutDialog().show(context.getSupportFragmentManager(), "analytics_opt_out");
+        }
+    }
+
+
+    private FragmentActivity findActivity(Context context) {
+        while (context instanceof ContextWrapper) {
+            if (context instanceof FragmentActivity) {
+                return (FragmentActivity) context;
+            }
+            context = ((ContextWrapper) context).getBaseContext();
+        }
+        return null;
     }
 
     /***

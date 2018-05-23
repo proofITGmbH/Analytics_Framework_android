@@ -21,8 +21,8 @@ public class MainActivity extends AppCompatActivity {
         AdvancedAppTracker.instance().trackUser("alice", "alice@bob.com", null);
         AdvancedAppTracker.instance().trackAdLoaded("123456");
         AdvancedAppTracker.instance().trackShowDetails("id", "details of id");
-        AdvancedAppTracker.instance().enable(true);
-        AdvancedAppTracker.instance().enable(true, FabricTrackerImpl.TRACKER_NAME, FirebaseTrackerImpl.TRACKER_NAME);
+        AdvancedAppTracker.instance().enable(this, true);
+        AdvancedAppTracker.instance().enable(this, true, FabricTrackerImpl.TRACKER_NAME, FirebaseTrackerImpl.TRACKER_NAME);
         AdvancedAppTracker.instance().isTrackerEnabled(FabricTrackerImpl.TRACKER_NAME);
         Timber.d("message");
         Timber.e(new IllegalStateException("error"));
