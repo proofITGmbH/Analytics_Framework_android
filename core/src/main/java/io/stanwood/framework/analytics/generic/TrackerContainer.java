@@ -14,9 +14,11 @@ public class TrackerContainer {
     private static final Tracker[] TRACKER_EMPTY = new Tracker[0];
     private final TrackerSettingsService settingsService;
     private volatile Tracker[] trackersArray = TRACKER_EMPTY;
+    private TrackerMigrationCallback migrationCallback;
 
     private TrackerContainer(Builder builder) {
         this.trackersArray = builder.trackers.toArray(new Tracker[builder.trackers.size()]);
+        this.migrationCallback = builder.migrationCallback;
         this.settingsService = new TrackerSettingsService(builder.context);
         initContainer();
     }
@@ -30,20 +32,10 @@ public class TrackerContainer {
         for (int i = 0, count = trackers.length; i < count; i++) {
             String trackerName = trackers[i].getTrackerName();
             if (!settingsService.isConfigAvailable(trackerName)) {
-                settingsService.storeTrackerState(trackerName, migrateTrackerState(trackerName));
+                settingsService.storeTrackerState(trackerName, migrationCallback.migrateTrackerState(trackerName));
             }
             trackers[i].setEnabled(settingsService.isTrackerEnabled(trackerName, true));
         }
-    }
-
-    /**
-     * Override to set the enabled state of a tracker for the first time
-     * This should be used to migrate opt out state from other tracking frameworks
-     * @param trackerName Name of the tracker ro migrate
-     * @return tracker enabled state , default true
-     */
-    protected boolean migrateTrackerState(@NonNull String trackerName) {
-        return true;
     }
 
     /***
@@ -109,6 +101,7 @@ public class TrackerContainer {
     public static class Builder {
         private List<Tracker> trackers = new ArrayList<>();
         private Context context;
+        private TrackerMigrationCallback migrationCallback = new TrackerMigrationCallback();
 
         public Builder(Context context) {
             this.context = context.getApplicationContext();
@@ -124,8 +117,26 @@ public class TrackerContainer {
             return this;
         }
 
+        public Builder setMigrationCallback(TrackerMigrationCallback migrationCallback) {
+            this.migrationCallback = migrationCallback;
+            return this;
+        }
+
         public TrackerContainer build() {
             return new TrackerContainer(this);
+        }
+    }
+
+    public static class TrackerMigrationCallback {
+        /**
+         * Override to set the enabled state of a tracker for the first time
+         * This should be used to migrate opt out state from other tracking frameworks
+         *
+         * @param trackerName Name of the tracker ro migrate
+         * @return tracker enabled state , default true
+         */
+        boolean migrateTrackerState(@NonNull String trackerName) {
+            return true;
         }
     }
 
