@@ -36,6 +36,12 @@ public class TrackerContainer {
         }
     }
 
+    /**
+     * Override to set the enabled state of a tracker for the first time
+     * This should be used to migrate opt out state from other tracking frameworks
+     * @param trackerName Name of the tracker ro migrate
+     * @return tracker enabled state , default true
+     */
     protected boolean migrateTrackerState(@NonNull String trackerName) {
         return true;
     }
