@@ -62,7 +62,7 @@ public class BaseAnalyticsTracker implements AnalyticsTracker, TrackerContainer.
         if (activity == null) {
             throw new IllegalStateException("Illegal context used");
         }
-        this.enable(activity, enable, trackerNames);
+        enableImpl(activity, enable, trackerNames);
     }
 
     /***
@@ -72,14 +72,28 @@ public class BaseAnalyticsTracker implements AnalyticsTracker, TrackerContainer.
      * @param trackerNames List of tracker names or null to apply to all trackers
      */
     public void enable(@NonNull FragmentActivity context, boolean enable, @Nullable String... trackerNames) {
+        enableImpl(context, enable, trackerNames);
+    }
+
+    /***
+     * Set enable state of given tracker names , use this in e.g. watch apps
+     * This will NOT show any opt out dialogs
+     * @param enable State to set tracker to
+     * @param trackerNames List of tracker names or null to apply to all trackers
+     */
+    public void enableSilent(boolean enable, @Nullable String... trackerNames) {
+        enableImpl(null, enable, trackerNames);
+    }
+
+    private void enableImpl(@Nullable FragmentActivity context, boolean enable, @Nullable String... trackerNames) {
         if (!enable) {
             trackEvent(TrackerParams.builder("tracking_opt_out").build());
         }
         trackerContainer.enableTrackers(enable, trackerNames);
-        if (!enable) {
-            new OptOutDialog().show(context.getSupportFragmentManager(), "analytics_opt_out");
-        } else {
+        if (enable) {
             trackEvent(TrackerParams.builder("tracking_opt_in").build());
+        } else if (context != null) {
+            new OptOutDialog().show(context.getSupportFragmentManager(), "analytics_opt_out");
         }
     }
 
