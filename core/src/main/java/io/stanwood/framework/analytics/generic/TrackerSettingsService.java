@@ -20,4 +20,8 @@ class TrackerSettingsService {
     void storeTrackerState(@NonNull String trackerName, boolean enabled) {
         preferences.edit().putBoolean(trackerName, enabled).apply();
     }
+
+    boolean isConfigAvailable(@NonNull String trackerName){
+        return preferences.contains(trackerName);
+    }
 }
