@@ -61,8 +61,8 @@ dependencies {
     releaseImplementation 'com.github.stanwood.Analytics_Framework_android:loggingtrackingprovider-noop:$latest_version'
 
     // Infoonline Tracker - optional
-    debugImplementation "com.github.stanwood.Infonline_Analytics_Tracker_android:infoonlinetrackingprovider-noop:$analytics_version"
-    releaseImplementation "com.github.stanwood.Infonline_Analytics_Tracker_android:infoonlinetrackingprovider:$analytics_version"
+    debugImplementation "com.github.stanwood.Infonline_Analytics_Tracker_android:infoonlinetrackingprovider-noop:$infoonline_tracker_version"
+    releaseImplementation "com.github.stanwood.Infonline_Analytics_Tracker_android:infoonlinetrackingprovider:$infoonline_tracker_version"
 
     // Facebook Tracker - optional
     debugImplementation "com.github.stanwood.Analytics_Framework_android:facebooktrackingprovider-noop:$analytics_version"
@@ -174,13 +174,15 @@ All trackers are ENABLED by default!
 Check [noop module's](#noop-modules) to disable tracking in debug builds.
 Use BaseAnalyticsTrackers `enable(boolean)` function to change the state of your trackers.
 
+To display an opt out message the provided context needs to be a FragmentActivity child.
+
 e.g. Set all trackers to disabled:
 
-```enable(false);```
+```enable(context, false);```
 
 Set Fabric and Firebase to enabled (This will not change the enabled state of any other tracker)
 
-```enable(true, FabricTracker.TRACKER_NAME, FirebaseTracker.TRACKER_NAME);```
+```enable(context, true, FabricTracker.TRACKER_NAME, FirebaseTracker.TRACKER_NAME);```
 
 Trackers enabled state is persisted over app sessions. 
 
@@ -205,6 +207,11 @@ You could configure the dependency in your app's `build.gradle` like so:
 debugImplementation 'com.github.stanwood.Analytics_Framework_android:testfairytrackingprovider:$latest_version'
 releaseImplementation 'com.github.stanwood.Analytics_Framework_android:testfairytrackingprovider-noop:$latest_version'
 ```
+
+#### Migration from other tracker frameworks
+
+The first time a tracker gets initialized `migrateTrackerState(trackerName)` gets called , which per default returns true. Override this if needed to set the initial tracker enabled state from your previously used framework.
+
 
 ## Tracker specific documentation
 
