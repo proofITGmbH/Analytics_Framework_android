@@ -23,17 +23,32 @@ import timber.log.Timber;
 /**
  * TrackerContainer proxy to force default tracker integration
  */
-public class BaseAnalyticsTracker implements AnalyticsTracker {
+public class BaseAnalyticsTracker implements AnalyticsTracker, TrackerContainer.TrackerMigrationCallback {
     private final TrackerContainer trackerContainer;
 
     protected BaseAnalyticsTracker(@NonNull Context context, @NonNull FabricTracker fabricTracker, @NonNull FirebaseTracker firebaseTracker,
                                    @NonNull TestfairyTracker testfairyTracker, @Nullable Tracker... optional) {
-        TrackerContainer.Builder builder = TrackerContainer.builder(context).addTracker(fabricTracker, firebaseTracker, testfairyTracker);
+        TrackerContainer.Builder builder = TrackerContainer.builder(context)
+                .addTracker(fabricTracker, firebaseTracker, testfairyTracker)
+                .setMigrationCallback(this);
         if (optional != null) {
             builder.addTracker(optional);
         }
         trackerContainer = builder.build();
         Timber.plant(new TrackerTree(trackerContainer));
+    }
+
+
+    /**
+     * Override to set the enabled state of a tracker for the first time
+     * This should be used to migrate opt out state from other tracking frameworks
+     *
+     * @param trackerName Name of the tracker ro migrate
+     * @return tracker enabled state , default true
+     */
+    @Override
+    public boolean migrateTrackerState(@NonNull String trackerName) {
+        return true;
     }
 
     /***
