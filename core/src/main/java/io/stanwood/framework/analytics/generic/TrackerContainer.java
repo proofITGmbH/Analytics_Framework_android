@@ -28,9 +28,16 @@ public class TrackerContainer {
     private void initContainer() {
         Tracker[] trackers = trackersArray;
         for (int i = 0, count = trackers.length; i < count; i++) {
-            Tracker tracker = trackers[i];
-            tracker.setEnabled(settingsService.isTrackerEnabled(tracker.getTrackerName(), true));
+            String trackerName = trackers[i].getTrackerName();
+            if (!settingsService.isConfigAvailable(trackerName)) {
+                settingsService.storeTrackerState(trackerName, migrateTrackerState(trackerName));
+            }
+            trackers[i].setEnabled(settingsService.isTrackerEnabled(trackerName, true));
         }
+    }
+
+    protected boolean migrateTrackerState(@NonNull String trackerName) {
+        return true;
     }
 
     /***
