@@ -31,7 +31,7 @@ public class TrackerContainer {
         Tracker[] trackers = trackersArray;
         for (int i = 0, count = trackers.length; i < count; i++) {
             String trackerName = trackers[i].getTrackerName();
-            if (!settingsService.isConfigAvailable(trackerName)) {
+            if (migrationCallback != null && !settingsService.isConfigAvailable(trackerName)) {
                 settingsService.storeTrackerState(trackerName, migrationCallback.migrateTrackerState(trackerName));
             }
             trackers[i].setEnabled(settingsService.isTrackerEnabled(trackerName, true));
@@ -101,7 +101,7 @@ public class TrackerContainer {
     public static class Builder {
         private List<Tracker> trackers = new ArrayList<>();
         private Context context;
-        private TrackerMigrationCallback migrationCallback = new TrackerMigrationCallback();
+        private TrackerMigrationCallback migrationCallback;
 
         public Builder(Context context) {
             this.context = context.getApplicationContext();
@@ -127,7 +127,7 @@ public class TrackerContainer {
         }
     }
 
-    public static class TrackerMigrationCallback {
+    public interface TrackerMigrationCallback {
         /**
          * Override to set the enabled state of a tracker for the first time
          * This should be used to migrate opt out state from other tracking frameworks
@@ -135,9 +135,7 @@ public class TrackerContainer {
          * @param trackerName Name of the tracker ro migrate
          * @return tracker enabled state , default true
          */
-        boolean migrateTrackerState(@NonNull String trackerName) {
-            return true;
-        }
+        boolean migrateTrackerState(@NonNull String trackerName);
     }
 
 }

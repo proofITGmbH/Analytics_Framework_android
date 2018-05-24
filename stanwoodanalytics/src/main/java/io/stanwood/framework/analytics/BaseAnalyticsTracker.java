@@ -23,17 +23,32 @@ import timber.log.Timber;
 /**
  * TrackerContainer proxy to force default tracker integration
  */
-public class BaseAnalyticsTracker implements AnalyticsTracker {
+public class BaseAnalyticsTracker implements AnalyticsTracker, TrackerContainer.TrackerMigrationCallback {
     private final TrackerContainer trackerContainer;
 
     protected BaseAnalyticsTracker(@NonNull Context context, @NonNull FabricTracker fabricTracker, @NonNull FirebaseTracker firebaseTracker,
                                    @NonNull TestfairyTracker testfairyTracker, @Nullable Tracker... optional) {
-        TrackerContainer.Builder builder = TrackerContainer.builder(context).addTracker(fabricTracker, firebaseTracker, testfairyTracker);
+        TrackerContainer.Builder builder = TrackerContainer.builder(context)
+                .addTracker(fabricTracker, firebaseTracker, testfairyTracker)
+                .setMigrationCallback(this);
         if (optional != null) {
             builder.addTracker(optional);
         }
         trackerContainer = builder.build();
         Timber.plant(new TrackerTree(trackerContainer));
+    }
+
+
+    /**
+     * Override to set the enabled state of a tracker for the first time
+     * This should be used to migrate opt out state from other tracking frameworks
+     *
+     * @param trackerName Name of the tracker ro migrate
+     * @return tracker enabled state , default true
+     */
+    @Override
+    public boolean migrateTrackerState(@NonNull String trackerName) {
+        return true;
     }
 
     /***
@@ -47,7 +62,7 @@ public class BaseAnalyticsTracker implements AnalyticsTracker {
         if (activity == null) {
             throw new IllegalStateException("Illegal context used");
         }
-        this.enable(activity, enable, trackerNames);
+        enableImpl(activity, enable, trackerNames);
     }
 
     /***
@@ -57,14 +72,28 @@ public class BaseAnalyticsTracker implements AnalyticsTracker {
      * @param trackerNames List of tracker names or null to apply to all trackers
      */
     public void enable(@NonNull FragmentActivity context, boolean enable, @Nullable String... trackerNames) {
+        enableImpl(context, enable, trackerNames);
+    }
+
+    /***
+     * Set enable state of given tracker names , use this in e.g. watch apps
+     * This will NOT show any opt out dialogs
+     * @param enable State to set tracker to
+     * @param trackerNames List of tracker names or null to apply to all trackers
+     */
+    public void enableSilent(boolean enable, @Nullable String... trackerNames) {
+        enableImpl(null, enable, trackerNames);
+    }
+
+    private void enableImpl(@Nullable FragmentActivity context, boolean enable, @Nullable String... trackerNames) {
         if (!enable) {
             trackEvent(TrackerParams.builder("tracking_opt_out").build());
         }
         trackerContainer.enableTrackers(enable, trackerNames);
-        if (!enable) {
-            new OptOutDialog().show(context.getSupportFragmentManager(), "analytics_opt_out");
-        } else {
+        if (enable) {
             trackEvent(TrackerParams.builder("tracking_opt_in").build());
+        } else if (context != null) {
+            new OptOutDialog().show(context.getSupportFragmentManager(), "analytics_opt_out");
         }
     }
 
